@@ -43,7 +43,7 @@ A decline or a void that finds a signer of the step signed in the meantime start
 ## Where signing at the same time is not offered
 
 - **Part 11 mode.** Part 11 envelopes are signed one signer after another. The Part 11 validation (requirement SYS-08 and OQ-06) is written for that order, and a different sequence would need your OQ to be run again before use. The signers page does not offer the choice in Part 11 mode, and a send that has signers sharing a step is refused.
-- **Advanced and qualified signatures** (eID Easy or a CSC provider). Each such signature is added to the PDF on top of the one before it, so two cannot be made at once. The review page and the send refuse it; choose SignuDoc signatures, or give each signer their own step.
+- **Advanced and qualified signatures** (eID Easy or a CSC provider). Each such signature is added to the PDF on top of the one before it, so two cannot be made at once. The review page and the send refuse it; choose YouSignNow signatures, or give each signer their own step.
 
 ## How many signers
 

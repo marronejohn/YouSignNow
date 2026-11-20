@@ -9,10 +9,10 @@ import type { ResolvedSettings } from "./settings.ts";
 // SignuDoc run as a public service: its own name, landing page and legal
 // pages. An install's own logo and color are not used there.
 
-export const SIGNUDOC_NAME = "SignuDoc";
+export const SIGNUDOC_NAME = "YouSignNow";
 // The project's home is its repository. There is no SignuDoc-run site that
 // an install should send its visitors to, and no address there to write to.
-export const SIGNUDOC_URL = "https://github.com/NYLLON-SOFTWARE/SignuDoc";
+export const SIGNUDOC_URL = "https://github.com/marronejohn/YouSignNow";
 
 /** Where the install's logo is served. Public: it is shown to signers. */
 export const BRAND_LOGO_PATH = "/api/brand/logo";

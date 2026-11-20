@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to SignuDoc are recorded here. The format follows
+All notable changes to YouSignNow are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow
 [Semantic Versioning](https://semver.org/). Until 1.0, a minor release may
 change settings or the database in ways that need a migration step; each
@@ -11,7 +11,7 @@ release says when it does.
 ### API
 
 - API keys: an administrator can make keys under Settings, Organization, API
-  keys, for another app to use the SignuDoc API. A key is shown once, only
+  keys, for another app to use the YouSignNow API. A key is shown once, only
   its hash is stored, and it acts as the administrator who made it. Keys can
   be read-only, can expire, and stop working when revoked or when their
   administrator stops being one. `GET /api/v1/me` checks a key works. See
@@ -326,7 +326,7 @@ the end of this entry.
 ### Project security
 
 - CodeQL, dependency review, a weekly `npm audit` and OpenSSF Scorecard run
-  on the SignuDoc repository (skipped in a copy made by the Deploy button).
+  on the YouSignNow repository (skipped in a copy made by the Deploy button).
 - Each release gets a CycloneDX SBOM, a source archive and signed build
   provenance attached. `SECURITY.md` says how to verify them.
 
@@ -349,7 +349,7 @@ migration step.
   first deployment with "One or more integration resources failed to
   provision": wait, refresh and redeploy.
 - New [guide for AI agents](docs/deploy-with-an-agent.md) that deploy
-  SignuDoc for someone through their browser.
+  YouSignNow for someone through their browser.
 - The README's button now reads "Deploy to Vercel", with "or copy this to
   your LLM" under it, linking to that guide.
 
@@ -360,14 +360,14 @@ change: this release needs no migration step.
 
 ### Keeping an install up to date
 
-- **Check for updates** in Settings, SignuDoc (administrators only): shows
+- **Check for updates** in Settings, YouSignNow (administrators only): shows
   the version the site runs, asks GitHub for the latest release, and shows
   what is new in it.
-- **Update SignuDoc workflow** (`.github/workflows/update-signudoc.yml`) in
+- **Update YouSignNow workflow** (`.github/workflows/update-signudoc.yml`) in
   each copy: runs every Monday or by hand, merges the new release with the
   copy on a `signudoc-update/<version>` branch and opens a pull request, so
   Vercel builds a preview first. Changes you made to the code are kept; where
-  you and SignuDoc changed the same lines it stops and lists the files. It
+  you and YouSignNow changed the same lines it stops and lists the files. It
   never force-pushes.
 - Optional settings for the workflow: a `SIGNUDOC_UPDATE_TOKEN` secret so it
   can update workflow files too, `SIGNUDOC_AUTO_MERGE=1` to merge clean
@@ -379,7 +379,7 @@ change: this release needs no migration step.
 ### Upgrading from 0.1.0
 
 A copy made from 0.1.0 does not have the update workflow yet. Add
-`.github/workflows/update-signudoc.yml` to it once (Settings in SignuDoc
+`.github/workflows/update-signudoc.yml` to it once (Settings in YouSignNow
 links to the right page, and `docs/self-hosting.md` has the steps), then run
 it. If it asks which version you deployed, use `v0.1.0`.
 
@@ -395,7 +395,7 @@ it. If it asks which version you deployed, use `v0.1.0`.
 
 ## [0.1.0] - 2026-11-14
 
-The first open-source release. SignuDoc is an e-signature platform that an
+The first open-source release. YouSignNow is an e-signature platform that an
 organization deploys to its own Vercel account and runs on free plans.
 
 ### Deploy and run it yourself
@@ -462,7 +462,7 @@ checked against the real services:
 - Part 11 mode and the validation pack are a starting point: each
   organization still has to validate its own install.
 
-SignuDoc is software, not legal advice. See the README's legal disclaimer.
+YouSignNow is software, not legal advice. See the README's legal disclaimer.
 
 [0.5.2]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.5.2
 [0.5.1]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.5.1

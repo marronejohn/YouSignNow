@@ -24,6 +24,10 @@ const METHOD_COPY: Record<Method, { helper: string; label: string }> = {
     helper: "We email a 6-digit code to the address this document was sent to.",
     label: "Code from your email",
   },
+  sms_code: {
+    helper: "We text a 6-digit code to the phone number the sender listed for you.",
+    label: "Code from your phone",
+  },
 };
 
 export function SignerVerificationScreen({
@@ -38,9 +42,11 @@ export function SignerVerificationScreen({
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(
-    state.emailCodeSentAt && method === "email_code"
+    method === "email_code" && state.emailCodeSentAt
       ? `A code was sent to ${state.maskedEmail}.`
-      : null,
+      : method === "sms_code" && state.smsCodeSentAt
+        ? `A code was sent to ${state.maskedPhone ?? "your phone"}.`
+        : null,
   );
   const [isChecking, setIsChecking] = useState(false);
   const [isSending, setIsSending] = useState(false);
@@ -53,16 +59,21 @@ export function SignerVerificationScreen({
   const base = `/api/signing/${encodeURIComponent(token)}`;
 
   async function sendCode() {
+    const isSms = method === "sms_code";
     setIsSending(true);
     setError(null);
 
     try {
-      const response = await fetch(`${base}/verify/email-code`, {
-        method: "POST",
-      });
+      const response = await fetch(
+        `${base}/verify/${isSms ? "sms-code" : "email-code"}`,
+        {
+          method: "POST",
+        },
+      );
       const payload = (await response.json().catch(() => null)) as {
         error?: string;
         maskedEmail?: string;
+        maskedPhone?: string;
         retryAfterSeconds?: number;
         sent?: boolean;
       } | null;
@@ -72,11 +83,13 @@ export function SignerVerificationScreen({
         return;
       }
 
-      const maskedEmail = payload?.maskedEmail ?? state.maskedEmail;
+      const maskedTarget = isSms
+        ? payload?.maskedPhone ?? state.maskedPhone ?? "your phone"
+        : payload?.maskedEmail ?? state.maskedEmail;
 
       if (payload?.sent === false) {
         setNotice(
-          `A code was already sent to ${maskedEmail} less than a minute ago, so no new email went out. Use that code, or send a new one when the countdown on the button ends.`,
+          `A code was already sent to ${maskedTarget} less than a minute ago, so no new one went out. Use that code, or send a new one when the countdown on the button ends.`,
         );
         const seconds = Math.max(1, Math.ceil(payload.retryAfterSeconds ?? 60));
 
@@ -87,8 +100,8 @@ export function SignerVerificationScreen({
 
       setNotice(
         notice
-          ? `A new code was sent to ${maskedEmail}.`
-          : `A code was sent to ${maskedEmail}.`,
+          ? `A new code was sent to ${maskedTarget}.`
+          : `A code was sent to ${maskedTarget}.`,
       );
     } catch {
       setError("The code could not be sent right now.");
@@ -149,7 +162,7 @@ export function SignerVerificationScreen({
       setResendAt(null);
       setResendWait(0);
       setNotice(
-        `A code was sent to ${state.maskedEmail}. If it has not arrived, you can send a new one now.`,
+        `A code was sent to ${method === "sms_code" ? state.maskedPhone ?? "your phone" : state.maskedEmail}. If it has not arrived, you can send a new one now.`,
       );
     }
 
@@ -161,7 +174,7 @@ export function SignerVerificationScreen({
       window.clearInterval(timer);
       document.removeEventListener("visibilitychange", tick);
     };
-  }, [resendAt, state.maskedEmail]);
+  }, [resendAt, method, state.maskedEmail, state.maskedPhone]);
 
   const copy = METHOD_COPY[method];
   const step = state.required.indexOf(method) + 1;
@@ -240,7 +253,7 @@ export function SignerVerificationScreen({
               >
                 Continue
               </ShellButton>
-              {method === "email_code" ? (
+              {method === "email_code" || method === "sms_code" ? (
                 <ShellButton
                   disabled={resendWait > 0}
                   loading={isSending}
@@ -248,7 +261,9 @@ export function SignerVerificationScreen({
                   variant="secondary"
                 >
                   {!notice
-                    ? "Email me a code"
+                    ? method === "sms_code"
+                      ? "Text me a code"
+                      : "Email me a code"
                     : resendWait > 0
                       ? `Send a new code in ${String(resendWait)}s`
                       : "Send a new code"}

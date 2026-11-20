@@ -142,7 +142,7 @@ export type SigningDisclosure = z.infer<typeof signingDisclosureSchema>;
 export const signerCheckRequestSchema = z.discriminatedUnion("method", [
   z.object({
     code: z.string().trim().min(1).max(64),
-    method: z.enum(["access_code", "email_code"]),
+    method: z.enum(["access_code", "email_code", "sms_code"]),
   }),
   // Part 11 envelopes: the signer's own account, by its email address and
   // password.
@@ -167,9 +167,12 @@ export type SigningVerificationState = {
   emailCodeSentAt: number | null;
   envelopeTitle: string;
   maskedEmail: string;
-  pending: Array<"access_code" | "account" | "email_code">;
-  required: Array<"access_code" | "account" | "email_code">;
+  /** Set only when a texted code is one of the checks. */
+  maskedPhone: string | null;
+  pending: Array<"access_code" | "account" | "email_code" | "sms_code">;
+  required: Array<"access_code" | "account" | "email_code" | "sms_code">;
   senderName: string;
+  smsCodeSentAt: number | null;
 };
 export type SigningDeclineResponse = z.infer<
   typeof signingDeclineResponseSchema

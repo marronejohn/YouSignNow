@@ -384,7 +384,10 @@ export type DraftSignerStepSigner = {
   id: string;
   name: string;
   order: number;
+  /** E.164, for the texted-code check. */
+  phone?: string | null;
   requireEmailCode?: boolean;
+  requireSmsCode?: boolean;
   /** Set on the signers step only. */
   signatureMeaning?: SignatureMeaning | null;
   /** The step of the signing order; signers who share one sign together. */
@@ -976,10 +979,12 @@ export async function copyEnvelopeToDraft(
               updated_at,
               access_code_hash,
               require_email_code,
+              phone_e164,
+              require_sms_code,
               signature_meaning,
               signing_step
             ) VALUES (
-              $1, $2, $3, $4, $5, 'pending', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $6, $7, $8, $9, $10, $11
+              $1, $2, $3, $4, $5, 'pending', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $6, $7, $8, $9, $10, $11, $12, $13
             )
           `,
           [
@@ -992,6 +997,8 @@ export async function copyEnvelopeToDraft(
             now,
             null,
             checks.get(signer.id)?.requireEmailCode ?? false,
+            checks.get(signer.id)?.phoneE164 ?? null,
+            checks.get(signer.id)?.requireSmsCode ?? false,
             null,
             signingStepOf(signer),
           ],
@@ -1342,7 +1349,9 @@ async function listSignerCheckSettings(
     string,
     {
       hasAccessCode: boolean;
+      phoneE164: string | null;
       requireEmailCode: boolean;
+      requireSmsCode: boolean;
       signatureMeaning: SignatureMeaning | null;
     }
   >
@@ -1350,7 +1359,9 @@ async function listSignerCheckSettings(
   const rows = await queryMany<{
     hasAccessCode: boolean;
     id: string;
+    phoneE164: string | null;
     requireEmailCode: boolean;
+    requireSmsCode: boolean;
     signatureMeaning: string | null;
   }>(
     database,
@@ -1358,7 +1369,9 @@ async function listSignerCheckSettings(
       SELECT
         id,
         access_code_hash IS NOT NULL AS "hasAccessCode",
+        phone_e164 AS "phoneE164",
         require_email_code AS "requireEmailCode",
+        require_sms_code AS "requireSmsCode",
         signature_meaning AS "signatureMeaning"
       FROM signers
       WHERE envelope_id = $1
@@ -1371,7 +1384,9 @@ async function listSignerCheckSettings(
       row.id,
       {
         hasAccessCode: Boolean(row.hasAccessCode),
+        phoneE164: row.phoneE164,
         requireEmailCode: Boolean(row.requireEmailCode),
+        requireSmsCode: Boolean(row.requireSmsCode),
         signatureMeaning: parseSignatureMeaning(row.signatureMeaning),
       },
     ]),
@@ -2212,7 +2227,9 @@ export async function getDraftSignerStepDataForUser(
         id: signer.id,
         name: signer.name,
         order: signer.signOrder,
+        phone: checks.get(signer.id)?.phoneE164 ?? null,
         requireEmailCode: checks.get(signer.id)?.requireEmailCode ?? false,
+        requireSmsCode: checks.get(signer.id)?.requireSmsCode ?? false,
         signatureMeaning: checks.get(signer.id)?.signatureMeaning ?? null,
         step: signingStepOf(signer),
       }),
@@ -2684,11 +2701,14 @@ export async function sendDraftEnvelope(
 
     if (
       [...checks.values()].some(
-        (check) => check.hasAccessCode || check.requireEmailCode,
+        (check) =>
+          check.hasAccessCode ||
+          check.requireEmailCode ||
+          check.requireSmsCode,
       )
     ) {
       throw new EnvelopeMutationError(
-        "Embedded signers are identified by your app, so leave out access codes and emailed codes.",
+        "Embedded signers are identified by your app, so leave out access codes, emailed codes and texted codes.",
         400,
       );
     }
@@ -2819,11 +2839,14 @@ export async function sendDraftEnvelope(
 
         if (
           [...lockedChecks.values()].some(
-            (check) => check.hasAccessCode || check.requireEmailCode,
+            (check) =>
+              check.hasAccessCode ||
+              check.requireEmailCode ||
+              check.requireSmsCode,
           )
         ) {
           throw new EnvelopeMutationError(
-            "Embedded signers are identified by your app, so leave out access codes and emailed codes.",
+            "Embedded signers are identified by your app, so leave out access codes, emailed codes and texted codes.",
             400,
           );
         }
@@ -4311,7 +4334,9 @@ export async function replaceDraftEnvelopeSigners(
       email: signer.email,
       id: persistedSignerId,
       name: signer.name,
+      phoneE164: signer.phone,
       requireEmailCode: signer.requireEmailCode,
+      requireSmsCode: signer.requireSmsCode,
       signatureMeaning: signer.signatureMeaning,
       signOrder: index + 1,
       signingStep: signingSteps[index]!,
@@ -4354,6 +4379,8 @@ export async function replaceDraftEnvelopeSigners(
               updated_at = $4,
               access_code_hash = CASE WHEN $7::boolean THEN $8 ELSE access_code_hash END,
               require_email_code = COALESCE($9, require_email_code),
+              phone_e164 = CASE WHEN $13::boolean THEN $14 ELSE phone_e164 END,
+              require_sms_code = COALESCE($15, require_sms_code),
               signature_meaning = CASE WHEN $10::boolean THEN $11 ELSE signature_meaning END,
               signing_step = $12
             WHERE id = $5 AND envelope_id = $6
@@ -4371,6 +4398,9 @@ export async function replaceDraftEnvelopeSigners(
             signer.signatureMeaning !== undefined,
             signer.signatureMeaning ?? null,
             signer.signingStep,
+            signer.phoneE164 !== undefined,
+            signer.phoneE164 ?? null,
+            signer.requireSmsCode ?? null,
           ],
         );
       } else {
@@ -4395,10 +4425,12 @@ export async function replaceDraftEnvelopeSigners(
               updated_at,
               access_code_hash,
               require_email_code,
+              phone_e164,
+              require_sms_code,
               signature_meaning,
               signing_step
             ) VALUES (
-              $1, $2, $3, $4, $5, 'pending', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $6, $7, $8, $9, $10, $11
+              $1, $2, $3, $4, $5, 'pending', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, $6, $7, $8, $9, $10, $11, $12, $13
             )
           `,
           [
@@ -4411,6 +4443,8 @@ export async function replaceDraftEnvelopeSigners(
             updatedAt,
             signer.accessCodeHash ?? null,
             signer.requireEmailCode ?? false,
+            signer.phoneE164 ?? null,
+            signer.requireSmsCode ?? false,
             signer.signatureMeaning ?? null,
             signer.signingStep,
           ],
@@ -4472,7 +4506,9 @@ export async function replaceDraftEnvelopeSigners(
         hasAccessCode: checks.get(signer.id)?.hasAccessCode ?? false,
         id: signer.id,
         name: signer.name,
+        phone: checks.get(signer.id)?.phoneE164 ?? null,
         requireEmailCode: checks.get(signer.id)?.requireEmailCode ?? false,
+        requireSmsCode: checks.get(signer.id)?.requireSmsCode ?? false,
         signatureMeaning: checks.get(signer.id)?.signatureMeaning ?? null,
         signOrder: signer.signOrder,
         signingStep: signingStepOf(signer),

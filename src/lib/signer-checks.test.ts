@@ -70,12 +70,43 @@ test("a cookie whose method list was edited is rejected", () => {
 
 test("required checks follow the signer's settings", () => {
   assert.deepEqual(
-    requiredSignerChecks({ accessCodeHash: null, requireEmailCode: false }),
+    requiredSignerChecks({
+      accessCodeHash: null,
+      phoneE164: null,
+      requireEmailCode: false,
+      requireSmsCode: false,
+    }),
     [],
   );
   assert.deepEqual(
-    requiredSignerChecks({ accessCodeHash: "x", requireEmailCode: true }),
+    requiredSignerChecks({
+      accessCodeHash: "x",
+      phoneE164: null,
+      requireEmailCode: true,
+      requireSmsCode: false,
+    }),
     ["access_code", "email_code"],
+  );
+
+  assert.deepEqual(
+    requiredSignerChecks({
+      accessCodeHash: null,
+      phoneE164: "+61402123456",
+      requireEmailCode: false,
+      requireSmsCode: true,
+    }),
+    ["sms_code"],
+  );
+
+  // No phone number, no texted code to check.
+  assert.deepEqual(
+    requiredSignerChecks({
+      accessCodeHash: null,
+      phoneE164: null,
+      requireEmailCode: false,
+      requireSmsCode: true,
+    }),
+    [],
   );
 });
 

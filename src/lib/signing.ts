@@ -58,6 +58,10 @@ import {
   recordEmailSent,
 } from "./services/audit.ts";
 import {
+  createSmsService,
+  type SmsService,
+} from "./services/sms.ts";
+import {
   createEmailService,
   createLazyEmailService,
   fitsAsAttachments,
@@ -106,13 +110,19 @@ import {
 import {
   checkAccessCode,
   checkEmailCode,
+  checkSmsCode,
   EMAIL_CODE_MAX_ATTEMPTS,
   EMAIL_CODE_RESEND_SECONDS,
   EMAIL_CODE_TTL_SECONDS,
   getSignerCheckState,
   issueEmailCode,
+  issueSmsCode,
   maskEmailAddress,
+  maskPhoneNumber,
   requiredSignerChecks,
+  SMS_CODE_MAX_ATTEMPTS,
+  SMS_CODE_RESEND_SECONDS,
+  SMS_CODE_TTL_SECONDS,
   type SignerCheckMethod,
   type SignerCheckState,
 } from "./signer-checks.ts";
@@ -1343,9 +1353,11 @@ async function assertSignerChecksPassed(
       emailCodeSentAt: state.emailCodeSentAt,
       envelopeTitle: context.envelope.title,
       maskedEmail: maskEmailAddress(context.signer.email),
+      maskedPhone: state.phoneE164 ? maskPhoneNumber(state.phoneE164) : null,
       pending,
       required,
       senderName: normalizeSenderName(context.sender),
+      smsCodeSentAt: state.smsCodeSentAt,
     });
   }
 
@@ -1547,6 +1559,185 @@ export async function sendSignerEmailCode(
   };
 }
 
+export type SignerSmsCodeResult = {
+  maskedPhone: string;
+  /** Seconds until a new code can be sent; 0 when this call sent one. */
+  retryAfterSeconds: number;
+  /** Whether this call texted a new code. False during the resend cooldown. */
+  sent: boolean;
+  smsCodeSentAt: number;
+};
+
+function smsCooldownResult(
+  smsCodeSentAt: number,
+  now: number,
+  maskedPhone: string,
+): SignerSmsCodeResult {
+  return {
+    maskedPhone,
+    retryAfterSeconds: Math.max(
+      1,
+      smsCodeSentAt + SMS_CODE_RESEND_SECONDS - now,
+    ),
+    sent: false,
+    smsCodeSentAt,
+  };
+}
+
+/**
+ * Texts the signer a one-time code, when the sender asked for one and left
+ * a phone number. Mirrors the emailed code: one claim per resend window,
+ * hashed and single-use, cleared again when the send fails.
+ */
+export async function sendSignerSmsCode(
+  token: string,
+  {
+    database = getDb(),
+    smsService = createSmsService(),
+  }: { database?: DbPool; smsService?: SmsService } = {},
+): Promise<SignerSmsCodeResult> {
+  const context = await resolveSigningContext(token, { database });
+  const state = await getSignerCheckState(context.signer.id!, database);
+  const now = Math.floor(Date.now() / 1000);
+
+  if (!state.requireSmsCode || !state.phoneE164) {
+    throw new SigningMutationError("No code is needed for this link.", 400);
+  }
+
+  const maskedPhone = maskPhoneNumber(state.phoneE164);
+
+  if (
+    state.smsCodeSentAt !== null &&
+    now - state.smsCodeSentAt < SMS_CODE_RESEND_SECONDS &&
+    state.smsCodeHash
+  ) {
+    return smsCooldownResult(state.smsCodeSentAt, now, maskedPhone);
+  }
+
+  const issued = issueSmsCode();
+  // Claim the resend window and save the code in one statement, so two tabs
+  // cannot both send, leaving one texted code already replaced.
+  const presentedTokenHash = hashOpaqueToken(token);
+  const claimed = await database.query(
+    `
+      UPDATE signers
+      SET
+        sms_code_hash = $1,
+        sms_code_expires_at = $2,
+        sms_code_attempts = 0,
+        sms_code_sent_at = $3
+      WHERE id = $4
+        AND signing_token_hash = $6
+        AND (
+          sms_code_hash IS NULL
+          OR sms_code_sent_at IS NULL
+          OR sms_code_sent_at <= $5
+        )
+    `,
+    [
+      issued.hash,
+      now + SMS_CODE_TTL_SECONDS,
+      now,
+      context.signer.id,
+      now - SMS_CODE_RESEND_SECONDS,
+      presentedTokenHash,
+    ],
+  );
+
+  if (claimed.rowCount !== 1) {
+    const stillThisLink = await queryOne<{ id: string }>(
+      database,
+      `
+        SELECT id
+        FROM signers
+        WHERE id = $1 AND signing_token_hash = $2
+      `,
+      [context.signer.id, presentedTokenHash],
+    );
+
+    if (!stillThisLink) {
+      throw new SigningMutationError(
+        "This signing link is no longer active.",
+        409,
+      );
+    }
+
+    // Another request claimed the window first. Its code is the one to use,
+    // unless that send failed and cleared it again in the meantime.
+    const current = await getSignerCheckState(context.signer.id!, database);
+
+    if (current.smsCodeHash === null || current.smsCodeSentAt === null) {
+      throw new SigningMutationError(
+        "The code could not be sent right now. Try again.",
+        503,
+      );
+    }
+
+    return smsCooldownResult(
+      current.smsCodeSentAt,
+      now,
+      maskPhoneNumber(current.phoneE164 ?? state.phoneE164),
+    );
+  }
+
+  const minutes = Math.round(SMS_CODE_TTL_SECONDS / 60);
+  const branding = await getBranding();
+  const text = [
+    `${branding.productName}: your code to open "${context.envelope.title}" is ${issued.code}.`,
+    `It works for ${String(minutes)} minutes. Ignore this text if you did not open the link.`,
+  ].join(" ");
+
+  try {
+    await smsService.send(
+      {
+        text,
+        to: state.phoneE164,
+      },
+      {
+        idempotencyKey: `signing-code/${context.envelope.id}/${context.signer.id}`,
+      },
+    );
+  } catch (error) {
+    // Not sent, so the signer may ask again at once.
+    await database.query(
+      `
+        UPDATE signers
+        SET
+          sms_code_hash = NULL,
+          sms_code_expires_at = NULL,
+          sms_code_sent_at = NULL,
+          sms_code_attempts = 0
+        WHERE id = $1 AND sms_code_hash = $2
+      `,
+      [context.signer.id, issued.hash],
+    );
+    throw error;
+  }
+
+  await recordAuditEvent(
+    {
+      actorEmail: context.signer.email,
+      actorType: "signer",
+      envelopeId: context.envelope.id,
+      event: "email_sent",
+      metadata: {
+        ...signerAuditMetadata(context),
+        channel: "sms",
+        maskedPhone,
+        template: "signing_code",
+      },
+    },
+    database,
+  );
+
+  return {
+    maskedPhone,
+    retryAfterSeconds: 0,
+    sent: true,
+    smsCodeSentAt: now,
+  };
+}
+
 /**
  * Checks an access code or emailed code. Returns every check this browser
  * has now passed, for the caller to store in the link's cookie.
@@ -1567,6 +1758,76 @@ function describeCredentialFailure(result: {
   return `That email address or password is not right. ${result.attemptsLeft} ${result.attemptsLeft === 1 ? "try is" : "tries are"} left before the account is locked for signing.`;
 }
 
+/**
+ * Counts the attempt and reads an issued one-time code in one statement, so
+ * parallel guesses cannot share an attempt, then consumes the code on the
+ * pass. Shared by the emailed and the texted code.
+ */
+async function consumeIssuedCode(input: {
+  attemptsColumn: string;
+  code: string;
+  codeColumn: string;
+  database: DbExecutor;
+  maxAttempts: number;
+  signerId: string;
+  token: string;
+  verify: (code: string, storedHash: string) => boolean;
+}): Promise<boolean> {
+  const { attemptsColumn, code, codeColumn, database, maxAttempts } = input;
+  // Column names come from this module's own callers, never from input.
+  const attempt = await database.query<{
+    attempts: number;
+    hash: string;
+  }>(
+    `
+      UPDATE signers
+      SET ${attemptsColumn} = ${attemptsColumn} + 1
+      WHERE id = $1
+        AND signing_token_hash = $4
+        AND ${codeColumn}_hash IS NOT NULL
+        AND ${codeColumn}_expires_at >= $2
+        AND ${attemptsColumn} < $3
+      RETURNING ${codeColumn}_hash AS hash, ${attemptsColumn} AS attempts
+    `,
+    [input.signerId, Math.floor(Date.now() / 1000), maxAttempts, hashOpaqueToken(input.token)],
+  );
+  const current = attempt.rows[0];
+
+  if (!current) {
+    throw new SigningMutationError(
+      "That code has expired. Send a new one.",
+      410,
+    );
+  }
+
+  if (input.verify(code, current.hash)) {
+    // Used once: only the request that clears it passes.
+    const consumed = await database.query(
+      `
+        UPDATE signers
+        SET ${codeColumn}_hash = NULL, ${codeColumn}_expires_at = NULL
+        WHERE id = $1 AND ${codeColumn}_hash = $2
+      `,
+      [input.signerId, current.hash],
+    );
+
+    return consumed.rowCount === 1;
+  }
+
+  if (current.attempts >= maxAttempts) {
+    await database.query(
+      `
+        UPDATE signers
+        SET ${codeColumn}_hash = NULL, ${codeColumn}_expires_at = NULL
+        WHERE id = $1 AND ${codeColumn}_hash = $2
+      `,
+      [input.signerId, current.hash],
+    );
+  }
+
+  return false;
+}
+
 export async function verifySignerCheck(
   token: string,
   input: unknown,
@@ -1581,7 +1842,6 @@ export async function verifySignerCheck(
   const parsed = signerCheckRequestSchema.parse(input);
   const context = await resolveSigningContext(token, { database });
   const state = await getSignerCheckState(context.signer.id!, database);
-  const now = Math.floor(Date.now() / 1000);
   let passed = false;
 
   if (!requiredSignerChecks(state).includes(parsed.method)) {
@@ -1624,56 +1884,29 @@ export async function verifySignerCheck(
     }
   } else if (parsed.method === "access_code") {
     passed = checkAccessCode(parsed.code, state.accessCodeHash!);
+  } else if (parsed.method === "email_code") {
+    passed = await consumeIssuedCode({
+      attemptsColumn: "email_code_attempts",
+      code: parsed.code,
+      codeColumn: "email_code",
+      database,
+      maxAttempts: EMAIL_CODE_MAX_ATTEMPTS,
+      signerId: context.signer.id!,
+      token,
+      verify: checkEmailCode,
+    });
   } else {
-    // Count the attempt and read the code in one statement, so parallel
-    // guesses cannot share an attempt.
-    const attempt = await database.query<{
-      attempts: number;
-      hash: string;
-    }>(
-      `
-        UPDATE signers
-        SET email_code_attempts = email_code_attempts + 1
-        WHERE id = $1
-          AND signing_token_hash = $4
-          AND email_code_hash IS NOT NULL
-          AND email_code_expires_at >= $2
-          AND email_code_attempts < $3
-        RETURNING email_code_hash AS hash, email_code_attempts AS attempts
-      `,
-      [context.signer.id, now, EMAIL_CODE_MAX_ATTEMPTS, hashOpaqueToken(token)],
-    );
-    const current = attempt.rows[0];
-
-    if (!current) {
-      throw new SigningMutationError(
-        "That code has expired. Send a new one.",
-        410,
-      );
-    }
-
-    if (checkEmailCode(parsed.code, current.hash)) {
-      // Used once: only the request that clears it passes.
-      const consumed = await database.query(
-        `
-          UPDATE signers
-          SET email_code_hash = NULL, email_code_expires_at = NULL
-          WHERE id = $1 AND email_code_hash = $2
-        `,
-        [context.signer.id, current.hash],
-      );
-
-      passed = consumed.rowCount === 1;
-    } else if (current.attempts >= EMAIL_CODE_MAX_ATTEMPTS) {
-      await database.query(
-        `
-          UPDATE signers
-          SET email_code_hash = NULL, email_code_expires_at = NULL
-          WHERE id = $1 AND email_code_hash = $2
-        `,
-        [context.signer.id, current.hash],
-      );
-    }
+    // The texted code, checked exactly like the emailed one.
+    passed = await consumeIssuedCode({
+      attemptsColumn: "sms_code_attempts",
+      code: parsed.code,
+      codeColumn: "sms_code",
+      database,
+      maxAttempts: SMS_CODE_MAX_ATTEMPTS,
+      signerId: context.signer.id!,
+      token,
+      verify: checkSmsCode,
+    });
   }
 
   await recordAuditEvent(

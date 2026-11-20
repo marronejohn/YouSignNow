@@ -27,12 +27,16 @@ export const signerCheckMethods = [
   "access_code",
   "account",
   "email_code",
+  "sms_code",
 ] as const;
 export type SignerCheckMethod = (typeof signerCheckMethods)[number];
 
 export const EMAIL_CODE_TTL_SECONDS = 10 * 60;
 export const EMAIL_CODE_MAX_ATTEMPTS = 5;
 export const EMAIL_CODE_RESEND_SECONDS = 60;
+export const SMS_CODE_TTL_SECONDS = 10 * 60;
+export const SMS_CODE_MAX_ATTEMPTS = 5;
+export const SMS_CODE_RESEND_SECONDS = 60;
 const VERIFICATION_COOKIE_TTL_SECONDS = 8 * 60 * 60;
 const COOKIE_CONTEXT = "signudoc/signer-verification/v1";
 
@@ -46,6 +50,13 @@ export type SignerCheckState = {
   emailCodeHash: string | null;
   emailCodeSentAt: number | null;
   requireEmailCode: boolean;
+  /** The signer's phone, in E.164; set when the sender asks for SMS. */
+  phoneE164: string | null;
+  requireSmsCode: boolean;
+  smsCodeAttempts: number;
+  smsCodeExpiresAt: number | null;
+  smsCodeHash: string | null;
+  smsCodeSentAt: number | null;
 };
 
 export async function getSignerCheckState(
@@ -63,7 +74,13 @@ export async function getSignerCheckState(
         email_code_expires_at AS "emailCodeExpiresAt",
         email_code_hash AS "emailCodeHash",
         email_code_sent_at AS "emailCodeSentAt",
-        require_email_code AS "requireEmailCode"
+        require_email_code AS "requireEmailCode",
+        phone_e164 AS "phoneE164",
+        require_sms_code AS "requireSmsCode",
+        sms_code_attempts AS "smsCodeAttempts",
+        sms_code_expires_at AS "smsCodeExpiresAt",
+        sms_code_hash AS "smsCodeHash",
+        sms_code_sent_at AS "smsCodeSentAt"
       FROM signers
       WHERE id = $1
     `,
@@ -80,18 +97,32 @@ export async function getSignerCheckState(
       emailCodeHash: null,
       emailCodeSentAt: null,
       requireEmailCode: false,
+      phoneE164: null,
+      requireSmsCode: false,
+      smsCodeAttempts: 0,
+      smsCodeExpiresAt: null,
+      smsCodeHash: null,
+      smsCodeSentAt: null,
     }
   );
 }
 
 export function requiredSignerChecks(
-  state: Pick<SignerCheckState, "accessCodeHash" | "requireEmailCode"> &
+  state: Pick<
+    SignerCheckState,
+    "accessCodeHash" | "phoneE164" | "requireEmailCode" | "requireSmsCode"
+  > &
     Partial<Pick<SignerCheckState, "accountUserId">>,
 ): SignerCheckMethod[] {
   return [
     ...(state.accessCodeHash ? (["access_code"] as const) : []),
     ...(state.accountUserId ? (["account"] as const) : []),
     ...(state.requireEmailCode ? (["email_code"] as const) : []),
+    // The phone is set whenever the sender asked for the texted code, and
+    // without it there would be nothing to text.
+    ...(state.requireSmsCode && state.phoneE164
+      ? (["sms_code"] as const)
+      : []),
   ];
 }
 
@@ -141,6 +172,37 @@ export function checkEmailCode(code: string, storedHash: string): boolean {
   const expected = Buffer.from(storedHash, "hex");
 
   return actual.length === expected.length && timingSafeEqual(actual, expected);
+}
+
+export function issueSmsCode(): { code: string; hash: string } {
+  const code = String(randomInt(0, 1_000_000)).padStart(6, "0");
+
+  return { code, hash: hashSmsCode(code) };
+}
+
+export function hashSmsCode(code: string): string {
+  return createHmac("sha256", cookieSecret())
+    .update(`sms-code:${normalizeCode(code)}`)
+    .digest("hex");
+}
+
+export function checkSmsCode(code: string, storedHash: string): boolean {
+  const actual = Buffer.from(hashSmsCode(code), "hex");
+  const expected = Buffer.from(storedHash, "hex");
+
+  return actual.length === expected.length && timingSafeEqual(actual, expected);
+}
+
+/**
+ * Keeps the country code and last three digits, so the signer can check
+ * which phone it went to and a stranger still learns nothing useful.
+ */
+export function maskPhoneNumber(phone: string): string {
+  const digits = phone.replace(/\D/g, "");
+  const tail = digits.slice(-3);
+  const head = digits.slice(0, Math.max(0, digits.length - 3 - 3));
+
+  return `+${head}${"*".repeat(Math.max(3, digits.length - 3 - head.length))}${tail}`;
 }
 
 function cookieSecret(): string {

@@ -1,6 +1,6 @@
 # Requirements
 
-Your user and functional requirements for SignuDoc in Part 11 mode. Each requirement has an ID that the [traceability matrix](traceability-matrix.md) and the [operational qualification](operational-qualification.md) use. Remove any you don't need, and add your own with new IDs.
+Your user and functional requirements for YouSignNow in Part 11 mode. Each requirement has an ID that the [traceability matrix](traceability-matrix.md) and the [operational qualification](operational-qualification.md) use. Remove any you don't need, and add your own with new IDs.
 
 Document `[ID]`, version `[1.0]`, approved by `[name, role, date]`.
 

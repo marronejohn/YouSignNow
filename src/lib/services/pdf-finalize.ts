@@ -1160,6 +1160,7 @@ const AUTHENTICATION_LABELS: Record<string, string> = {
   access_code: "access code from the sender",
   account: "own account, with email address and password to open it",
   email_code: "one-time code sent by email",
+  sms_code: "one-time code sent by text message",
 };
 
 function readStringArray(value: unknown): string[] {

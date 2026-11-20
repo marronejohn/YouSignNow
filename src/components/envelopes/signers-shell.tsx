@@ -28,6 +28,7 @@ import { getSignerPalette } from "./signer-palette";
 
 const envelopeSteps = ["Upload", "Signers", "Place fields", "Review"];
 const validEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const validPhonePattern = /^\+[1-9]\d{4,17}$/;
 const genericSubmitError = "Something went wrong. Please try again.";
 
 type SignersShellProps = {
@@ -45,6 +46,9 @@ type SignerChecks = {
   hasAccessCode: boolean;
   removeAccessCode: boolean;
   requireEmailCode: boolean;
+  /** The signer's phone, with the country code; for the texted code. */
+  phone: string;
+  requireSmsCode: boolean;
   /** The sender picked "access code" (a saved code or one being typed). */
   wantsAccessCode: boolean;
   /** Part 11 mode: what this signature means (21 CFR 11.50). */
@@ -68,6 +72,7 @@ type SignerErrors = {
   accessCode?: string;
   email?: string;
   name?: string;
+  phone?: string;
 };
 
 /** Someone who gets the finished document without signing it. */
@@ -98,6 +103,8 @@ function createSigner(
     localId,
     removeAccessCode: false,
     requireEmailCode: overrides?.requireEmailCode ?? false,
+    phone: overrides?.phone ?? "",
+    requireSmsCode: overrides?.requireSmsCode ?? false,
     wantsAccessCode: overrides?.hasAccessCode ?? false,
     name: overrides?.name ?? "",
     signatureMeaning: overrides?.signatureMeaning ?? null,
@@ -136,7 +143,7 @@ function computeSigningSteps(
   return steps;
 }
 
-type SignerCheckChoice = "access_code" | "email_code" | "none";
+type SignerCheckChoice = "access_code" | "email_code" | "sms_code" | "none";
 
 // One check per signer. The server still honours both at once (the signer
 // must then pass both), which older envelopes and API callers may have set.
@@ -150,23 +157,34 @@ const SIGNER_CHECK_CHOICES: readonly {
     value: "email_code",
   },
   {
+    label: "Text them a one-time code when they open the link",
+    value: "sms_code",
+  },
+  {
     label: "Ask for an access code you give them yourself",
     value: "access_code",
   },
 ];
 
 function signerCheckChoice(
-  signer: Pick<SignerChecks, "requireEmailCode" | "wantsAccessCode">,
+  signer: Pick<SignerChecks, "requireEmailCode" | "wantsAccessCode"> &
+    Partial<Pick<SignerChecks, "requireSmsCode">>,
 ): SignerCheckChoice | "both" {
-  if (signer.requireEmailCode && signer.wantsAccessCode) {
+  const extraCodes =
+    [signer.requireEmailCode, signer.requireSmsCode].filter(Boolean).length +
+    (signer.wantsAccessCode ? 1 : 0);
+
+  if (extraCodes > 1) {
     return "both";
   }
 
   return signer.requireEmailCode
     ? "email_code"
-    : signer.wantsAccessCode
-      ? "access_code"
-      : "none";
+    : signer.requireSmsCode
+      ? "sms_code"
+      : signer.wantsAccessCode
+        ? "access_code"
+        : "none";
 }
 
 function buildInitialModel(record?: DraftSignerStepData): InitialModel {
@@ -178,7 +196,9 @@ function buildInitialModel(record?: DraftSignerStepData): InitialModel {
       email: signer.email,
       hasAccessCode: signer.hasAccessCode,
       name: signer.name,
+      phone: signer.phone ?? "",
       requireEmailCode: signer.requireEmailCode,
+      requireSmsCode: signer.requireSmsCode,
       signatureMeaning: signer.signatureMeaning ?? null,
       signerId: signer.id,
       touched: { email: true, name: true },
@@ -279,6 +299,11 @@ function buildSignerErrors(signers: readonly ShellSigner[]) {
       signerErrors.accessCode = "Use 4 to 64 characters";
     }
 
+    if (signer.requireSmsCode && !validPhonePattern.test(signer.phone.trim())) {
+      signerErrors.phone =
+        "Enter the number with the country code, like +61402123456";
+    }
+
     errorsBySignerId[signer.localId] = signerErrors;
   }
 
@@ -286,7 +311,9 @@ function buildSignerErrors(signers: readonly ShellSigner[]) {
 }
 
 function hasSignerErrors(errors: SignerErrors) {
-  return Boolean(errors.name || errors.email || errors.accessCode);
+  return Boolean(
+    errors.name || errors.email || errors.accessCode || errors.phone,
+  );
 }
 
 function reorderSigners(
@@ -325,7 +352,15 @@ function buildSignerRequest(
       email: signer.email,
       id: signer.signerId,
       name: signer.name,
+      phone: signer.requireSmsCode
+        ? signer.phone.trim().length > 0
+          ? signer.phone.trim()
+          : undefined
+        : signer.phone.trim().length > 0
+          ? signer.phone.trim()
+          : null,
       requireEmailCode: signer.requireEmailCode,
+      requireSmsCode: signer.requireSmsCode,
       signatureMeaning: signer.signatureMeaning,
       signOrder: index + 1,
       signingStep: steps[index],
@@ -373,6 +408,7 @@ function SignerCard({
   onRemove,
   onTogetherChange,
   accessCodeError,
+  phoneError,
   part11Mode = false,
   previousStepLabel,
   showStep,
@@ -381,6 +417,7 @@ function SignerCard({
   stepSize,
 }: {
   accessCodeError?: string;
+  phoneError?: string;
   part11Mode?: boolean;
   /** Who signs in the step before this signer's, as "Signer 2". */
   previousStepLabel: string | null;
@@ -412,12 +449,14 @@ function SignerCard({
       ? {
           removeAccessCode: false,
           requireEmailCode: false,
+          requireSmsCode: false,
           wantsAccessCode: true,
         }
       : {
           accessCode: "",
           removeAccessCode: signer.hasAccessCode,
           requireEmailCode: choice === "email_code",
+          requireSmsCode: choice === "sms_code",
           wantsAccessCode: false,
         };
   const palette = getSignerPalette(index);
@@ -643,6 +682,35 @@ function SignerCard({
               </label>
             ))}
           </div>
+          {checkChoice === "sms_code" || signer.requireSmsCode ? (
+            <label className="grid gap-2">
+              <span className="text-[0.8125rem] font-semibold text-(--secondary)">
+                Signer phone number, with the country code
+              </span>
+              <input
+                aria-invalid={phoneError ? true : undefined}
+                aria-label={`Signer ${order} phone number`}
+                autoComplete="off"
+                className="field-input"
+                disabled={disabled}
+                maxLength={20}
+                onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                  onChecksChange({ phone: event.target.value })
+                }
+                placeholder="+61402123456"
+                type="tel"
+                value={signer.phone}
+              />
+              {phoneError ? (
+                <span
+                  className="text-xs font-semibold text-(--danger)"
+                  role="alert"
+                >
+                  {phoneError}
+                </span>
+              ) : null}
+            </label>
+          ) : null}
           {signer.wantsAccessCode ? (
             <label className="grid gap-2">
               <span className="text-[0.8125rem] font-semibold text-(--secondary)">
@@ -1121,6 +1189,7 @@ export function SignersShell({
                   }
                   onBlur={(field) => handleSignerBlur(signer.localId, field)}
                   accessCodeError={errorsBySignerId[signer.localId]?.accessCode}
+                  phoneError={errorsBySignerId[signer.localId]?.phone}
                   onChecksChange={(patch) =>
                     handleSignerChecksChange(signer.localId, patch)
                   }

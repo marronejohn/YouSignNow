@@ -1,6 +1,6 @@
 # Traceability matrix
 
-Each requirement in [Requirements](requirements.md), where SignuDoc meets it, and how it is tested. Paths are relative to the repository root.
+Each requirement in [Requirements](requirements.md), where YouSignNow meets it, and how it is tested. Paths are relative to the repository root.
 
 Three kinds of test evidence back the matrix:
 

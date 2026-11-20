@@ -27,6 +27,13 @@ export const copyRecipientSchema = z.object({
   email: emailSchema,
 });
 
+// E.164: a plus, a country code that does not start with zero, and digits.
+// Lengths beyond these are invalid under ITU E.164.
+export const phoneSchema = z
+  .string()
+  .trim()
+  .regex(/^\+[1-9]\d{4,17}$/, "Enter the number with the country code, like +61402123456");
+
 export const draftSignerSchema = z.object({
   id: idSchema.optional(),
   envelopeId: idSchema.optional(),
@@ -47,6 +54,10 @@ export const draftSignerSchema = z.object({
   // it, and leaving it out keeps the code already saved.
   accessCode: z.string().trim().min(4).max(64).nullable().optional(),
   requireEmailCode: z.boolean().optional(),
+  // Extra check: a one-time code texted to the signer when they open the
+  // link. The number is set with the country code, like +61402123456.
+  phone: phoneSchema.nullable().optional(),
+  requireSmsCode: z.boolean().optional(),
   // What the signature means, for Part 11 envelopes. Null clears it, and
   // leaving it out keeps the one already saved.
   signatureMeaning: z.enum(signatureMeanings).nullable().optional(),
@@ -132,7 +143,9 @@ export const replaceSignersResponseSchema = z.object({
       id: idSchema,
       hasAccessCode: z.boolean(),
       name: nameSchema,
+      phone: phoneSchema.nullable(),
       requireEmailCode: z.boolean(),
+      requireSmsCode: z.boolean(),
       signatureMeaning: z.enum(signatureMeanings).nullable(),
       signOrder: z.number().int().positive(),
       signingStep: z.number().int().positive(),

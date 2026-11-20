@@ -1,6 +1,6 @@
-# The SignuDoc API
+# The YouSignNow API
 
-Another app can use SignuDoc through its API: create an envelope from a
+Another app can use YouSignNow through its API: create an envelope from a
 PDF, send it, follow it, and download the signed PDF and the certificate of
 completion.
 Everything here runs inside your own install; nothing goes through a
@@ -18,7 +18,7 @@ An administrator makes a key under **Settings, Organization, API keys**:
 2. Choose **Read and write** (create, send and void envelopes, and read
    them) or **Read only**.
 3. Choose when it expires: in 30 days, 90 days, a year, or never.
-4. Copy the key. It starts with `sdk_` and is shown only this once; SignuDoc
+4. Copy the key. It starts with `sdk_` and is shown only this once; YouSignNow
    keeps only a hash of it.
 
 Send the key in the `Authorization` header of every request:
@@ -165,7 +165,7 @@ Things to know:
   half-made draft is left behind.
 - **`metadata`** is up to 2 KB of JSON of your own, returned with the
   envelope, for matching it to your records.
-- **`Idempotency-Key`** makes a retry safe. A request with a key SignuDoc has
+- **`Idempotency-Key`** makes a retry safe. A request with a key YouSignNow has
   seen in the last 24 hours gets the first answer again (with the header
   `Idempotent-Replayed: true`) instead of making a second envelope. The same
   key with a different request is refused with 422. If the install fails
@@ -346,7 +346,7 @@ Without a library, in Node.js:
 ```js
 import { createHmac, timingSafeEqual } from "node:crypto";
 
-function isFromSignuDoc(headers, rawBody, secret) {
+function isFromYouSignNow(headers, rawBody, secret) {
   const id = headers["webhook-id"];
   const timestamp = headers["webhook-timestamp"];
   const signatures = headers["webhook-signature"];
@@ -428,8 +428,8 @@ to make a new secret in Settings.
 ## Embedded signing
 
 With embedded signing, a signer signs inside your own app instead of
-following a link in an email. Your app signs the person in, asks SignuDoc
-for a signing link, and shows it in a frame on its page. SignuDoc emails
+following a link in an email. Your app signs the person in, asks YouSignNow
+for a signing link, and shows it in a frame on its page. YouSignNow emails
 no invitations or reminders for these envelopes. When an envelope is
 finished, the signers, copy recipients and sender get the finished document
 by email as usual.
@@ -440,7 +440,7 @@ An administrator lists the sites that may show signing pages, under
 Settings, Organization, Embedded signing: one exact origin each, such as
 `https://app.example.com`, with no path, up to 10. Until at least one site
 is listed, embedded sends are refused. Adding and removing sites is in the
-site audit trail. Every other page of SignuDoc can never be framed.
+site audit trail. Every other page of YouSignNow can never be framed.
 
 Only list sites you trust. Your app, not an email address, decides who
 signs an embedded envelope, so the certificate of completion says the

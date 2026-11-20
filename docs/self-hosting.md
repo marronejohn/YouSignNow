@@ -1,6 +1,6 @@
-# Self-hosting SignuDoc
+# Self-hosting YouSignNow
 
-Everything about running your own SignuDoc: deploying it, setting it up, what it costs, keeping it up to date, and the settings you can change. For working on the code, see [Development](development.md).
+Everything about running your own YouSignNow: deploying it, setting it up, what it costs, keeping it up to date, and the settings you can change. For working on the code, see [Development](development.md).
 
 - [Deploy to Vercel](#deploy-to-vercel)
 - [Set the site up](#set-the-site-up)
@@ -31,7 +31,7 @@ Step 6 is the one part that cannot be done for you: every email provider asks fo
 
 ### If the first deployment fails
 
-Vercel starts the first deployment as soon as the last store is added. Resend asks for a domain, sets it up and then checks its DNS records, and that can take a few minutes. If the deployment starts before Resend is ready, Vercel stops it before the build begins, with "One or more integration resources failed to provision". Your copy of SignuDoc is fine, and the database, file store and email are all created.
+Vercel starts the first deployment as soon as the last store is added. Resend asks for a domain, sets it up and then checks its DNS records, and that can take a few minutes. If the deployment starts before Resend is ready, Vercel stops it before the build begins, with "One or more integration resources failed to provision". Your copy of YouSignNow is fine, and the database, file store and email are all created.
 
 1. Wait a minute or two.
 2. Refresh the page. In the Vercel project, Storage lists Resend, Neon and Blob.
@@ -39,15 +39,15 @@ Vercel starts the first deployment as soon as the last store is added. Resend as
 
 If it fails the same way again, wait a few more minutes and redeploy once more. A deployment that fails during the build, with a log, is a different problem: the log says what went wrong.
 
-The build itself never waits on Resend. SignuDoc builds and runs without email, and Settings, Organization says when email is not connected yet.
+The build itself never waits on Resend. YouSignNow builds and runs without email, and Settings, Organization says when email is not connected yet.
 
 If the site opens on a page that says to connect a database, the database was not connected when the site was built. Connect it under Storage in the Vercel project, deploy again and reload.
 
 ### What it costs
 
-[What it costs](../README.md#what-it-costs), in the README, puts a year of SignuDoc next to a per-seat e-signature plan for teams of 5 to 50.
+[What it costs](../README.md#what-it-costs), in the README, puts a year of YouSignNow next to a per-seat e-signature plan for teams of 5 to 50.
 
-- **Vercel.** The free Hobby plan is enough to run SignuDoc, but Vercel [limits Hobby to personal, non-commercial use](https://vercel.com/docs/limits/fair-use-guidelines). An organization using this for its work belongs on Vercel Pro. Everything here works the same on both.
+- **Vercel.** The free Hobby plan is enough to run YouSignNow, but Vercel [limits Hobby to personal, non-commercial use](https://vercel.com/docs/limits/fair-use-guidelines). An organization using this for its work belongs on Vercel Pro. Everything here works the same on both.
 - **Neon, Vercel Blob and Resend** each have a free plan with limits: see [Neon](https://neon.com/faqs/free-plan-limits-and-quotas), [Vercel Blob](https://vercel.com/docs/vercel-blob/usage-and-pricing) and [Resend](https://resend.com/pricing). The two you are most likely to meet first, at the time of writing, are Resend's 100 emails a day, which is about 20 two-signer documents, and Vercel Blob's 2,000 uploads a month, which is about 250 documents. Every signing invitation, reminder and completed copy is an email, and every PDF, sealed copy and certificate is an upload. [What it costs](../README.md#what-it-costs) in the README works through all of the limits. None of these plans bills you for going over. It stops instead, until the month turns over or, for the two 1 GB storage limits, until you delete old documents or move up.
 
 ### Use your own web address
@@ -78,11 +78,11 @@ After this, preview deployments have no database and open on the page that asks 
 
 The Deploy button makes a copy of this repository in your GitHub account, and Vercel deploys every push to it. A copy does not receive new versions by itself: an update means bringing a new [release](https://github.com/NYLLON-SOFTWARE/SignuDoc/releases) into your copy. Vercel then builds it, and the production build applies any new database migrations.
 
-**See whether there is one.** Sign in as the administrator and open Settings. The SignuDoc section shows the version the site runs; **Check for updates** asks GitHub for the latest release and shows what is new in it.
+**See whether there is one.** Sign in as the administrator and open Settings. The YouSignNow section shows the version the site runs; **Check for updates** asks GitHub for the latest release and shows what is new in it.
 
 **Take it with the update workflow.** Your copy has a GitHub Actions workflow, `.github/workflows/update-signudoc.yml`, that does the git work for you:
 
-1. In your repository on GitHub, open **Actions**, then **Update SignuDoc**, and press **Run workflow**. (Settings in SignuDoc links straight there.) It also runs by itself every Monday.
+1. In your repository on GitHub, open **Actions**, then **Update YouSignNow**, and press **Run workflow**. (Settings in YouSignNow links straight there.) It also runs by itself every Monday.
 2. It merges the release with your copy on a branch named `signudoc-update/<version>` and opens a pull request. Vercel builds a preview of that branch.
 3. Look at the preview, then merge the pull request. Vercel deploys it to your site.
 
@@ -90,8 +90,8 @@ Using it costs nothing: a run takes well under a minute, and private repositorie
 
 What the workflow does and does not do:
 
-- **Your changes are kept.** It does a three-way merge between the SignuDoc version your copy is based on, your copy, and the new release, so code you changed stays changed. Where you and SignuDoc changed the same lines, it stops without touching anything and lists the files in the run's summary. Then update by hand, below.
-- **It works out which SignuDoc version your copy started from** by comparing its first commit with this project's history. If the first commit was edited and two versions fit equally well, the run stops and asks you to run it again with **Based on** set to the release you deployed, such as `v0.1.0`.
+- **Your changes are kept.** It does a three-way merge between the YouSignNow version your copy is based on, your copy, and the new release, so code you changed stays changed. Where you and YouSignNow changed the same lines, it stops without touching anything and lists the files in the run's summary. Then update by hand, below.
+- **It works out which YouSignNow version your copy started from** by comparing its first commit with this project's history. If the first commit was edited and two versions fit equally well, the run stops and asks you to run it again with **Based on** set to the release you deployed, such as `v0.1.0`.
 - **It never force-pushes** and never changes your production branch unless you ask it to (below). Everything arrives as a pull request.
 - **Database changes wait for the merge.** Preview builds do not touch the database (they share it with production unless you set `MIGRATE_ON_PREVIEW=1`), so a preview of an update that changes the database may show errors on pages that need the change. The pull request says when an update changes the database. Merging applies it during the production build. A database change stays if you later roll the site back to an older deployment, so do not roll back across an update that changed the database.
 - **Files in `.github/workflows` are left alone.** GitHub does not let a workflow's own token change workflow files. When a release changes one, the pull request lists it, and you can copy it from the release by hand. To have the workflow update them too, add the token below.
@@ -105,15 +105,15 @@ To skip the pull request, run the workflow with **Merge straight into the produc
 
 If Vercel deploys your site from a branch other than the repository's default branch, set the repository variable `SIGNUDOC_PRODUCTION_BRANCH` to that branch, so the workflow updates and opens pull requests against it.
 
-**A copy made before version 0.2.0** does not have the workflow yet. Add it once: in your repository on GitHub choose **Add file**, **Create new file**, name it `.github/workflows/update-signudoc.yml`, paste in [the workflow](https://raw.githubusercontent.com/NYLLON-SOFTWARE/SignuDoc/main/.github/workflows/update-signudoc.yml), and commit it to your production branch. Settings in SignuDoc links to the right page. Then run it as above.
+**A copy made before version 0.2.0** does not have the workflow yet. Add it once: in your repository on GitHub choose **Add file**, **Create new file**, name it `.github/workflows/update-signudoc.yml`, paste in [the workflow](https://raw.githubusercontent.com/NYLLON-SOFTWARE/SignuDoc/main/.github/workflows/update-signudoc.yml), and commit it to your production branch. Settings in YouSignNow links to the right page. Then run it as above.
 
-**Updating by hand.** A copy made by the Deploy button has none of this project's history, so a plain `git merge` refuses to merge "unrelated histories". Tell git which SignuDoc commit your copy started from, then merge as usual:
+**Updating by hand.** A copy made by the Deploy button has none of this project's history, so a plain `git merge` refuses to merge "unrelated histories". Tell git which YouSignNow commit your copy started from, then merge as usual:
 
 ```bash
 git clone https://github.com/<your-account>/signudoc.git
 cd signudoc
 git fetch https://github.com/NYLLON-SOFTWARE/SignuDoc.git main --tags
-# The SignuDoc commit your copy started from. The workflow's summary
+# The YouSignNow commit your copy started from. The workflow's summary
 # names it when it stops, or use the release tag you deployed, e.g. v0.1.0.
 git replace --graft "$(git rev-list --max-parents=0 HEAD)" v0.1.0
 git merge v0.2.0
@@ -135,7 +135,7 @@ A deployment made with the button needs no environment variables. These are ther
 | `RESEND_FROM_EMAIL`, `SUPPORT_EMAIL`                | Fix the sender and support addresses from the environment instead of in Settings.                                                                                                                      |
 | `BETTER_AUTH_SECRET`                                | Your own secret for signing sessions. Without it one is derived from the database password, so changing that password signs everyone out.                                                              |
 | `APP_URL`                                           | The site's public address, if it should not be the project's production domain.                                                                                                                        |
-| `HOSTED_MODE`                                       | `1` runs SignuDoc as a public service under its own name. See [Hosted mode](#hosted-mode).                                                                                                             |
+| `HOSTED_MODE`                                       | `1` runs YouSignNow as a public service under its own name. See [Hosted mode](#hosted-mode).                                                                                                             |
 | `RESEND_REGION`                                     | Where Resend sends from when the app adds your domain, for example `eu-west-1`. See [Running in the EU](#running-in-the-eu).                                                                           |
 | `SEAL_P12_BASE64`, `SEAL_P12_PASSWORD`              | Seal finished PDFs with a certificate from a certificate authority instead of the install's own. See [Signed PDFs and the seal](#signed-pdfs-and-the-seal).                                            |
 | `SEAL_TIMESTAMP_URL`                                | An RFC 3161 timestamp server that adds a trusted time to each seal, and long-term validation. See [Long-term validation](#long-term-validation).                                                       |
@@ -150,7 +150,7 @@ A deployment made with the button needs no environment variables. These are ther
 
 The first time you open a new install it takes you to `/setup`. There you name your organization, give its support address, and create the first account, which becomes the administrator. After that the setup page is gone for good.
 
-- **Support address.** Setup does not finish without one. It is the address signers and people with an account are told to write to, and where replies to the site's emails go. It is saved in your install's own settings and nowhere else; there is no SignuDoc address that it falls back to. The administrator can change it under Settings, Organization, but not remove it.
+- **Support address.** Setup does not finish without one. It is the address signers and people with an account are told to write to, and where replies to the site's emails go. It is saved in your install's own settings and nowhere else; there is no YouSignNow address that it falls back to. The administrator can change it under Settings, Organization, but not remove it.
 
 - **Who can sign up.** The install starts by letting people with an email address at the administrator's own domain create accounts (or nobody else, if the administrator used a public mailbox such as Gmail). The administrator can change this under Settings, Organization: people at listed domains, nobody, or anyone. People who are only sent a document to sign never need an account.
 - **More administrators.** Settings, Organization lists everyone with an account under People, where an administrator can make someone else an administrator or take that away. There is always at least one. When an account is closed, its finished documents and their audit trails move to the longest-standing administrator, because they are the organization's records. If that person later stops being an administrator, those documents move on to one who stays, and the documents they sent themselves stay with them.
@@ -179,7 +179,7 @@ These cover the people with an account (senders and administrators). Signers who
 
 ### API keys
 
-Another app can create and send envelopes through the [SignuDoc API](api.md). An administrator makes a key for it under Settings, Organization, API keys. The key is shown once and only its hash is stored. It acts as the administrator who made it, skips two-step sign-in (it is for servers, not people), and stops working when it is revoked, expires, or its administrator stops being one. Making and revoking keys is in the site audit trail.
+Another app can create and send envelopes through the [YouSignNow API](api.md). An administrator makes a key for it under Settings, Organization, API keys. The key is shown once and only its hash is stored. It acts as the administrator who made it, skips two-step sign-in (it is for servers, not people), and stops working when it is revoked, expires, or its administrator stops being one. Making and revoking keys is in the site audit trail.
 
 ### Webhooks
 
@@ -224,7 +224,7 @@ SAML is not supported. Okta, Entra ID and Google all offer OIDC for the same app
 
 ## Your responsibilities
 
-Your install carries your organization's name, not SignuDoc's. In Settings, link your own terms and privacy policy (without a privacy link, signers see a notice built from your settings at `/signer-privacy`; check it), keep the support address you gave at setup pointed at a mailbox someone reads, and choose how long finished documents are kept. Administrators see every envelope in the install that has been sent (Documents, "Everyone's"), whoever sent it; a draft stays its sender's own. They can open and download any of them, and ask for a finished one to be deleted from its page. The deletion waits 14 days: its sender is emailed a link to download it, any administrator can cancel until then, and the daily cleanup deletes it after that. A Part 11 record needs a reason. Sending, voiding, reminders and edits stay with the envelope's sender. An administrator's download of another member's file, each deletion request, each cancellation and each deletion are recorded in the install's audit log (Settings, Organization, "Site audit trail"), deletions with the document's fingerprints, its sender and the reason given. Under GDPR your organization is the controller; Settings, Organization has the tools to answer a signer who asks for their data or for its erasure.
+Your install carries your organization's name, not YouSignNow's. In Settings, link your own terms and privacy policy (without a privacy link, signers see a notice built from your settings at `/signer-privacy`; check it), keep the support address you gave at setup pointed at a mailbox someone reads, and choose how long finished documents are kept. Administrators see every envelope in the install that has been sent (Documents, "Everyone's"), whoever sent it; a draft stays its sender's own. They can open and download any of them, and ask for a finished one to be deleted from its page. The deletion waits 14 days: its sender is emailed a link to download it, any administrator can cancel until then, and the daily cleanup deletes it after that. A Part 11 record needs a reason. Sending, voiding, reminders and edits stay with the envelope's sender. An administrator's download of another member's file, each deletion request, each cancellation and each deletion are recorded in the install's audit log (Settings, Organization, "Site audit trail"), deletions with the document's fingerprints, its sender and the reason given. Under GDPR your organization is the controller; Settings, Organization has the tools to answer a signer who asks for their data or for its erasure.
 
 ## FDA 21 CFR Part 11
 
@@ -259,7 +259,7 @@ The lookups go to the timestamp server and the certificate authorities, outside 
 Under eIDAS, a seal is the organization's counterpart of a signature. A seal that meets the four tests of Article 36 (linked only to your organization, identifying it, made with a key under its control, and showing any later change) is an **advanced electronic seal**. To get one:
 
 - Buy a seal certificate that names your organization from a certificate authority, such as an eIDAS seal certificate or an organization-validated document-signing certificate. Choose one on the [EU trusted lists](https://esignature.ec.europa.eu/efda/tl-browser) or Adobe's Approved Trust List, so readers show your organization's name as verified.
-- Get it as a PKCS#12 file with an RSA key (SignuDoc does not read EC keys from a file yet), and set it as `SEAL_P12_BASE64` (the file in base64) and `SEAL_P12_PASSWORD`. Keep the file somewhere safe outside Vercel too: the key in it is what makes the seal yours.
+- Get it as a PKCS#12 file with an RSA key (YouSignNow does not read EC keys from a file yet), and set it as `SEAL_P12_BASE64` (the file in base64) and `SEAL_P12_PASSWORD`. Keep the file somewhere safe outside Vercel too: the key in it is what makes the seal yours.
 - Set `SEAL_TIMESTAMP_URL`, so the seal gets long-term validation as above. A timestamp server run by a qualified trust service provider gives a qualified electronic time stamp, which a court presumes accurate (Article 41).
 
 What this gives you: each finished PDF and certificate carries your organization's advanced seal, showing it came from you unchanged. What it does not: the signers' own signatures stay simple electronic signatures (for signatures in their own names, see the next section), and the seal is not a qualified seal, which needs a qualified certificate held on a qualified device, usually a trust service provider's remote signing service rather than a file. This is not legal advice: whether a seal is enough for a document is for your own counsel.
@@ -336,11 +336,11 @@ It is opt-in for now because it has not yet been proven against a live Vercel de
 
 ## Hosted mode
 
-`HOSTED_MODE=1` runs SignuDoc as a public service under its own name: the landing page at `/`, the built-in terms, privacy, contact and accessibility pages, and sign-up open to anyone. Leave it unset for an install that belongs to one organization.
+`HOSTED_MODE=1` runs YouSignNow as a public service under its own name: the landing page at `/`, the built-in terms, privacy, contact and accessibility pages, and sign-up open to anyone. Leave it unset for an install that belongs to one organization.
 
 ## Self-hosting somewhere else
 
-SignuDoc is a regular Next.js app and runs anywhere Node.js 24 and Postgres do:
+YouSignNow is a regular Next.js app and runs anywhere Node.js 24 and Postgres do:
 
 ```bash
 npm run db:migrate

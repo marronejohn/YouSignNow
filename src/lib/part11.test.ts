@@ -92,7 +92,9 @@ test("a signer bound to an account must pass the account check first", () => {
     requiredSignerChecks({
       accessCodeHash: null,
       accountUserId: "u1",
+      phoneE164: null,
       requireEmailCode: true,
+      requireSmsCode: false,
     }),
     ["account", "email_code"],
   );

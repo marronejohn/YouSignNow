@@ -1,22 +1,22 @@
 # SOC 2 pack
 
-SOC 2 is an audit of an **organization**, not of software. Nobody can certify SignuDoc as "SOC 2 compliant", because SignuDoc is code that each organization deploys and runs for itself. What an auditor looks at is your organization: how you run the install, who can reach it, how you change it, and which vendors you rely on.
+SOC 2 is an audit of an **organization**, not of software. Nobody can certify YouSignNow as "SOC 2 compliant", because YouSignNow is code that each organization deploys and runs for itself. What an auditor looks at is your organization: how you run the install, who can reach it, how you change it, and which vendors you rely on.
 
-This folder is there to make that easy. It is for the person at a deploying organization who has to put a SignuDoc install into their SOC 2 scope, or answer a customer's security questionnaire about it.
+This folder is there to make that easy. It is for the person at a deploying organization who has to put a YouSignNow install into their SOC 2 scope, or answer a customer's security questionnaire about it.
 
 | File                                      | What it is for                                                                                                                      |
 | ----------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | [Control map](control-map.md)             | The SOC 2 Trust Services Criteria, and for each one what the app does, what the vendors do, and what is yours to do.                |
 | [Vendor duties](vendor-duties.md)         | The services an install runs on, what each holds, which reports to collect, and the complementary controls their reports expect.    |
 | [Questionnaire answers](questionnaire.md) | Answers to the questions security questionnaires ask most, for an install set up as this pack recommends. Edit them to match yours. |
-| [Sample policies](policies/)              | Short starting points for the policies an auditor asks to see, written for a SignuDoc install. Adopt them into your own policy set. |
+| [Sample policies](policies/)              | Short starting points for the policies an auditor asks to see, written for a YouSignNow install. Adopt them into your own policy set. |
 | [Setup checklist](#setup-checklist)       | The settings that make the answers above true.                                                                                      |
 
-The pack describes SignuDoc as of the release it ships with. Check it against the version you run, and against your vendors' current reports: what they offer changes, and so does what your plan includes.
+The pack describes YouSignNow as of the release it ships with. Check it against the version you run, and against your vendors' current reports: what they offer changes, and so does what your plan includes.
 
 ## Who does what
 
-- **SignuDoc (the code)** gives you the controls inside the app: sign-in security, roles, audit trails, sealed documents, retention, backups. It is open source and provided as is, with no supplier agreement. You review and accept each release.
+- **YouSignNow (the code)** gives you the controls inside the app: sign-in security, roles, audit trails, sealed documents, retention, backups. It is open source and provided as is, with no supplier agreement. You review and accept each release.
 - **Your vendors** (Vercel, Neon, Resend, and any optional ones) run the infrastructure. Each has its own SOC 2 report, and your auditor treats them as subservice organizations, usually by the carve-out method: you collect their reports and show you meet the complementary user entity controls they list.
 - **Your organization** owns everything else: who gets access, how changes are approved, monitoring, incident response, vendor review, policies, and training.
 

@@ -26,7 +26,7 @@ import { readEnv, type EnvSource } from "./utils/env.ts";
 //
 // docs/backup-and-restore.md has the restore steps (scripts/restore-backup.ts).
 
-export const BACKUP_FORMAT = "signudoc-backup";
+export const BACKUP_FORMAT = "yousignnow-backup";
 export const BACKUP_FORMAT_VERSION = 1;
 export const DATABASE_PREFIX = "database/";
 export const FILES_PREFIX = "files/";
@@ -574,7 +574,7 @@ export async function* readDatabaseBackup(
         first = false;
 
         if (parsed.format !== BACKUP_FORMAT) {
-          throw new Error("This is not a SignuDoc database backup.");
+          throw new Error("This is not a YouSignNow database backup.");
         }
 
         yield {
@@ -680,7 +680,7 @@ export async function restoreDatabase({
 
         if (missing.length > 0) {
           throw new RestoreError(
-            `The backup is from a newer version of SignuDoc. Update this copy first; it lacks ${missing.join(", ")}.`,
+            `The backup is from a newer version of YouSignNow. Update this copy first; it lacks ${missing.join(", ")}.`,
           );
         }
 

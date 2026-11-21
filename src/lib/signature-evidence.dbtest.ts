@@ -28,7 +28,7 @@ let settingsRowExisted = true;
 
 before(async () => {
   database = await openTestDatabase();
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-evidence-"));
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-evidence-"));
   settingsRowExisted =
     (await database.query(`select 1 from app_settings`)).rowCount === 1;
 });

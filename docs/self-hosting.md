@@ -76,14 +76,14 @@ After this, preview deployments have no database and open on the page that asks 
 
 ### Keep your install up to date
 
-The Deploy button makes a copy of this repository in your GitHub account, and Vercel deploys every push to it. A copy does not receive new versions by itself: an update means bringing a new [release](https://github.com/NYLLON-SOFTWARE/SignuDoc/releases) into your copy. Vercel then builds it, and the production build applies any new database migrations.
+The Deploy button makes a copy of this repository in your GitHub account, and Vercel deploys every push to it. A copy does not receive new versions by itself: an update means bringing a new [release](https://github.com/marronejohn/YouSignNow/releases) into your copy. Vercel then builds it, and the production build applies any new database migrations.
 
 **See whether there is one.** Sign in as the administrator and open Settings. The YouSignNow section shows the version the site runs; **Check for updates** asks GitHub for the latest release and shows what is new in it.
 
-**Take it with the update workflow.** Your copy has a GitHub Actions workflow, `.github/workflows/update-signudoc.yml`, that does the git work for you:
+**Take it with the update workflow.** Your copy has a GitHub Actions workflow, `.github/workflows/update-yousignnow.yml`, that does the git work for you:
 
 1. In your repository on GitHub, open **Actions**, then **Update YouSignNow**, and press **Run workflow**. (Settings in YouSignNow links straight there.) It also runs by itself every Monday.
-2. It merges the release with your copy on a branch named `signudoc-update/<version>` and opens a pull request. Vercel builds a preview of that branch.
+2. It merges the release with your copy on a branch named `yousignnow-update/<version>` and opens a pull request. Vercel builds a preview of that branch.
 3. Look at the preview, then merge the pull request. Vercel deploys it to your site.
 
 Using it costs nothing: a run takes well under a minute, and private repositories get 2,000 free Actions minutes a month.
@@ -99,20 +99,20 @@ What the workflow does and does not do:
 Two optional settings in your repository on GitHub:
 
 - **Let the workflow open the pull request.** In Settings, Actions, General, under Workflow permissions, tick **Allow GitHub Actions to create and approve pull requests**. Without it the workflow pushes the branch and its summary links to the page where you open the pull request with one click.
-- **`SIGNUDOC_UPDATE_TOKEN`**, a repository secret (Settings, Secrets and variables, Actions). Make a [fine-grained personal access token](https://github.com/settings/personal-access-tokens/new) for your copy only, with read and write access to Contents, Pull requests and Workflows. The workflow uses it instead of its own token, so it can update workflow files and does not need the setting above. Added after an update left workflow files behind, the next run brings them in with a pull request of their own.
+- **`YOUSIGNNOW_UPDATE_TOKEN`**, a repository secret (Settings, Secrets and variables, Actions). Make a [fine-grained personal access token](https://github.com/settings/personal-access-tokens/new) for your copy only, with read and write access to Contents, Pull requests and Workflows. The workflow uses it instead of its own token, so it can update workflow files and does not need the setting above. Added after an update left workflow files behind, the next run brings them in with a pull request of their own.
 
-To skip the pull request, run the workflow with **Merge straight into the production branch** ticked, or set the repository variable `SIGNUDOC_AUTO_MERGE` to `1` to have the weekly run do that. It only does so when the release merges cleanly. Vercel then deploys the update without anyone looking at it first.
+To skip the pull request, run the workflow with **Merge straight into the production branch** ticked, or set the repository variable `YOUSIGNNOW_AUTO_MERGE` to `1` to have the weekly run do that. It only does so when the release merges cleanly. Vercel then deploys the update without anyone looking at it first.
 
-If Vercel deploys your site from a branch other than the repository's default branch, set the repository variable `SIGNUDOC_PRODUCTION_BRANCH` to that branch, so the workflow updates and opens pull requests against it.
+If Vercel deploys your site from a branch other than the repository's default branch, set the repository variable `YOUSIGNNOW_PRODUCTION_BRANCH` to that branch, so the workflow updates and opens pull requests against it.
 
-**A copy made before version 0.2.0** does not have the workflow yet. Add it once: in your repository on GitHub choose **Add file**, **Create new file**, name it `.github/workflows/update-signudoc.yml`, paste in [the workflow](https://raw.githubusercontent.com/NYLLON-SOFTWARE/SignuDoc/main/.github/workflows/update-signudoc.yml), and commit it to your production branch. Settings in YouSignNow links to the right page. Then run it as above.
+**A copy made before version 0.2.0** does not have the workflow yet. Add it once: in your repository on GitHub choose **Add file**, **Create new file**, name it `.github/workflows/update-yousignnow.yml`, paste in [the workflow](https://raw.githubusercontent.com/marronejohn/YouSignNow/main/.github/workflows/update-yousignnow.yml), and commit it to your production branch. Settings in YouSignNow links to the right page. Then run it as above.
 
 **Updating by hand.** A copy made by the Deploy button has none of this project's history, so a plain `git merge` refuses to merge "unrelated histories". Tell git which YouSignNow commit your copy started from, then merge as usual:
 
 ```bash
-git clone https://github.com/<your-account>/signudoc.git
-cd signudoc
-git fetch https://github.com/NYLLON-SOFTWARE/SignuDoc.git main --tags
+git clone https://github.com/<your-account>/yousignnow.git
+cd yousignnow
+git fetch https://github.com/marronejohn/YouSignNow.git main --tags
 # The YouSignNow commit your copy started from. The workflow's summary
 # names it when it stops, or use the release tag you deployed, e.g. v0.1.0.
 git replace --graft "$(git rev-list --max-parents=0 HEAD)" v0.1.0
@@ -193,7 +193,7 @@ An app can show the signing page inside its own site, for envelopes it sends thr
 
 Every row added to the site audit trail or to a document's audit trail is also written to the function logs, once it is saved, as one line of JSON. So are refused requests and failures worth a look. A Vercel log drain (team Settings, Drains, or an observability integration from the Vercel Marketplace such as Datadog, Axiom or Better Stack) then delivers them to your SIEM as fields it can search and alert on. Log drains are a paid Vercel feature; see Vercel's pricing page for which plans have them.
 
-Each line has `"source": "signudoc"` and a `type`:
+Each line has `"source": "yousignnow"` and a `type`:
 
 - `"audit"`: a copy of an audit row. `trail` is `site` or `envelope`, and the line carries `event`, `actorEmail`, `actorUserId`, `ipAddress`, `userAgent`, `metadata`, `envelopeId` (for a document), `occurredAt`, and the row's `sequence` and `rowHash`. The database stays the record: the hash matches a line to its row, and a gap in `sequence` shows a line that did not arrive. A change that fails and is rolled back writes no line.
 - `"security"`: a `category` and `message`, with the request's path (signing and download links are redacted), IP address and user, where known.

@@ -185,7 +185,7 @@ test("a write that fails with nothing stored is still a failure", async () => {
 });
 
 test("the local store keeps the first object too, and keeps it whole", async () => {
-  const rootDir = await mkdtemp(path.join(tmpdir(), "signudoc-storage-"));
+  const rootDir = await mkdtemp(path.join(tmpdir(), "yousignnow-storage-"));
 
   try {
     const storage = createLocalStorageService({ rootDir });
@@ -337,7 +337,7 @@ test("the storage driver is chosen from what is connected", () => {
 });
 
 test("an empty STORAGE_LOCAL_DIR keeps files in the default folder", async (t) => {
-  const workDir = await mkdtemp(path.join(tmpdir(), "signudoc-storage-"));
+  const workDir = await mkdtemp(path.join(tmpdir(), "yousignnow-storage-"));
   const previousDir = process.cwd();
 
   t.mock.method(console, "warn", () => {});

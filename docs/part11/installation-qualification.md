@@ -8,7 +8,7 @@ Install name: `[ ]` Web address: `[ ]` Performed by: `[ ]` Date: `[ ]`
 
 | #     | Check               | Expected                                                                                     | Result | Evidence                |
 | ----- | ------------------- | -------------------------------------------------------------------------------------------- | ------ | ----------------------- |
-| IQ-01 | The deployed commit | A commit on `main` of `NYLLON-SOFTWARE/SignuDoc` (or your fork), recorded by its full SHA    |        | Vercel deployment page  |
+| IQ-01 | The deployed commit | A commit on `main` of `marronejohn/YouSignNow` (or your fork), recorded by its full SHA    |        | Vercel deployment page  |
 | IQ-02 | CI for that commit  | "Typecheck, lint, unit tests, build" and "End-to-end test" passed                            |        | GitHub Actions run link |
 | IQ-03 | Database migrations | The build log shows every migration applied, up to `20261115090000_part11_mode.sql` or later |        | Vercel build log        |
 

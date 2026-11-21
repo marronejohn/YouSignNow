@@ -1,5 +1,5 @@
 -- Embedded signing: an app shows the signing page inside its own site, in
--- a frame, instead of SignuDoc emailing the signer a link.
+-- a frame, instead of YouSignNow emailing the signer a link.
 --
 -- envelopes.delivery
 -- * 'email' (every envelope until now): signers get their links by email.

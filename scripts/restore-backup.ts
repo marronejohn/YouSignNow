@@ -1,4 +1,4 @@
-// Restores a SignuDoc install from the daily backup (src/lib/backup.ts) into
+// Restores a YouSignNow install from the daily backup (src/lib/backup.ts) into
 // a new, empty database and Blob store. See docs/backup-and-restore.md.
 //
 //   DATABASE_URL=postgres://...            the new, empty database

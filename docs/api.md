@@ -520,9 +520,9 @@ window.addEventListener("message", (event) => {
   if (event.origin !== "https://sign.example.com") return;
 
   switch (event.data.type) {
-    case "signudoc:signed": // { envelopeId, signerId }
-    case "signudoc:declined": // { envelopeId, signerId }
-    case "signudoc:error": // { state }: "expired", "already-signed", "completed", "voided", …
+    case "yousignnow:signed": // { envelopeId, signerId }
+    case "yousignnow:declined": // { envelopeId, signerId }
+    case "yousignnow:error": // { state }: "expired", "already-signed", "completed", "voided", …
   }
 });
 ```

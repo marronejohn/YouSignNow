@@ -58,7 +58,7 @@ const createdUsers: string[] = [];
 
 before(async () => {
   database = await openTestDatabase();
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-deletion-"));
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-deletion-"));
   Object.assign(process.env, {
     STORAGE_DRIVER: "local",
     STORAGE_LOCAL_DIR: storageDir,

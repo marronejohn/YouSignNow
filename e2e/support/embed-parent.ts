@@ -1,9 +1,9 @@
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
 
-// A stand-in for an app that shows SignuDoc's signing page in a frame. It
+// A stand-in for an app that shows YouSignNow's signing page in a frame. It
 // serves one page that frames whatever ?src= says and keeps every message
-// the frame posts to it in window.signudocMessages.
+// the frame posts to it in window.yousignnowMessages.
 
 const PAGE = `<!doctype html>
 <html>
@@ -12,9 +12,9 @@ const PAGE = `<!doctype html>
     <h1>Customer portal</h1>
     <iframe id="signing" title="Sign your agreement" style="width:1200px;height:800px;border:0"></iframe>
     <script>
-      window.signudocMessages = [];
+      window.yousignnowMessages = [];
       window.addEventListener("message", (event) => {
-        window.signudocMessages.push({ data: event.data, origin: event.origin });
+        window.yousignnowMessages.push({ data: event.data, origin: event.origin });
       });
       document.getElementById("signing").src =
         new URLSearchParams(location.search).get("src") || "about:blank";

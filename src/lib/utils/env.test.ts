@@ -17,10 +17,10 @@ const NEON_URL =
 const vercelProduction = {
   NODE_ENV: "production",
   VERCEL: "1",
-  VERCEL_BRANCH_URL: "signudoc-git-main-acme.vercel.app",
+  VERCEL_BRANCH_URL: "yousignnow-git-main-acme.vercel.app",
   VERCEL_ENV: "production",
   VERCEL_PROJECT_PRODUCTION_URL: "sign.acme.com",
-  VERCEL_URL: "signudoc-abc123-acme.vercel.app",
+  VERCEL_URL: "yousignnow-abc123-acme.vercel.app",
 };
 
 test("a fresh Vercel install resolves everything from what Vercel provides", () => {
@@ -35,10 +35,10 @@ test("a fresh Vercel install resolves everything from what Vercel provides", () 
 test("a preview deployment uses its own branch URL", () => {
   const env = { ...vercelProduction, VERCEL_ENV: "preview" };
 
-  assert.equal(resolveAppUrl(env), "https://signudoc-git-main-acme.vercel.app");
+  assert.equal(resolveAppUrl(env), "https://yousignnow-git-main-acme.vercel.app");
   assert.deepEqual(resolveDeploymentOrigins(env), [
-    "https://signudoc-abc123-acme.vercel.app",
-    "https://signudoc-git-main-acme.vercel.app",
+    "https://yousignnow-abc123-acme.vercel.app",
+    "https://yousignnow-git-main-acme.vercel.app",
     "https://sign.acme.com",
   ]);
 });
@@ -88,7 +88,7 @@ test("the derived secret is stable and follows the database password", () => {
 });
 
 test("a weak database password is not used to derive a production secret", () => {
-  const weak = "postgres://signudoc:signudoc@db.internal:5432/signudoc";
+  const weak = "postgres://yousignnow:yousignnow@db.internal:5432/yousignnow";
 
   assert.equal(
     resolveAuthSecret({ DATABASE_URL: weak, NODE_ENV: "production" }),

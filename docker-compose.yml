@@ -6,18 +6,18 @@ services:
   db:
     image: postgres:17
     environment:
-      POSTGRES_USER: signudoc
-      POSTGRES_PASSWORD: signudoc
-      POSTGRES_DB: signudoc
+      POSTGRES_USER: yousignnow
+      POSTGRES_PASSWORD: yousignnow
+      POSTGRES_DB: yousignnow
     ports:
       - "127.0.0.1:5432:5432"
     volumes:
-      - signudoc-db:/var/lib/postgresql/data
+      - yousignnow-db:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U signudoc -d signudoc"]
+      test: ["CMD-SHELL", "pg_isready -U yousignnow -d yousignnow"]
       interval: 2s
       timeout: 3s
       retries: 30
 
 volumes:
-  signudoc-db:
+  yousignnow-db:

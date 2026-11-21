@@ -2,7 +2,7 @@ import { createHmac } from "node:crypto";
 import { createServer, type IncomingHttpHeaders } from "node:http";
 import type { AddressInfo } from "node:net";
 
-// A stand-in for an app that receives SignuDoc's webhooks: it keeps every
+// A stand-in for an app that receives YouSignNow's webhooks: it keeps every
 // request, and checks signatures the way the Standard Webhooks spec says a
 // receiver should.
 
@@ -38,7 +38,7 @@ export async function startWebhookReceiver() {
   return {
     close: () => new Promise<void>((resolve) => server.close(() => resolve())),
     received,
-    url: `http://127.0.0.1:${String(port)}/signudoc`,
+    url: `http://127.0.0.1:${String(port)}/yousignnow`,
   };
 }
 

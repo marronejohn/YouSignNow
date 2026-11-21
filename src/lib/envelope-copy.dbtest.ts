@@ -54,7 +54,7 @@ const THUMBNAIL = Uint8Array.from([
 
 before(async () => {
   database = await openTestDatabase();
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-envelope-copy-"));
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-envelope-copy-"));
   storageService = createStorageService({
     env: { STORAGE_DRIVER: "local", STORAGE_LOCAL_DIR: storageDir },
   });

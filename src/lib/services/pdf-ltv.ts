@@ -591,18 +591,18 @@ export function createValidationFetch({
 type CacheEntry = { expiresAt: number; value: unknown };
 
 declare global {
-  var __signudocValidationCache: Map<string, CacheEntry> | undefined;
+  var __yousignnowValidationCache: Map<string, CacheEntry> | undefined;
 }
 
 function cache(): Map<string, CacheEntry> {
-  globalThis.__signudocValidationCache ??= new Map();
+  globalThis.__yousignnowValidationCache ??= new Map();
 
-  return globalThis.__signudocValidationCache;
+  return globalThis.__yousignnowValidationCache;
 }
 
 /** Forgets cached issuer certificates and revocation answers, for tests. */
 export function resetValidationCache() {
-  globalThis.__signudocValidationCache = undefined;
+  globalThis.__yousignnowValidationCache = undefined;
 }
 
 async function cached<T>(

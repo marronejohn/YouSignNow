@@ -9,7 +9,7 @@ import type { ApiKeySummary } from "@/lib/api-keys";
 
 const GENERIC_ERROR_MESSAGE = "Something went wrong. Please try again.";
 const API_DOCS_URL =
-  "https://github.com/NYLLON-SOFTWARE/SignuDoc/blob/main/docs/api.md";
+  "https://github.com/marronejohn/YouSignNow/blob/main/docs/api.md";
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
@@ -216,7 +216,7 @@ export function ApiKeysPanel() {
             rel="noreferrer"
             target="_blank"
           >
-            SignuDoc API
+            YouSignNow API
           </a>
           . A key acts as the administrator who made it: what it sends shows in
           their documents. Keys skip two-step sign-in, so keep them in the

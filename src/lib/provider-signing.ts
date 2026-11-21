@@ -53,7 +53,7 @@ import { readEnv, resolveAppUrl, type EnvSource } from "./utils/env.ts";
 // provider's working state, encrypted, for at most SESSION_SECONDS.
 
 const SESSION_SECONDS = 30 * 60;
-const SECRET_CONTEXT = "signudoc/provider-session/v1";
+const SECRET_CONTEXT = "yousignnow/provider-session/v1";
 
 export const PROVIDER_RETURN_PATH = "/api/signing/provider/return";
 

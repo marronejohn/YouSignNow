@@ -45,13 +45,13 @@ import {
 //    key can no longer be read, a new one is made; documents sealed before
 //    still verify, because each carries its own certificate.
 
-const KEY_CONTEXT = "signudoc/seal-key/v1";
+const KEY_CONTEXT = "yousignnow/seal-key/v1";
 const SEAL_KEY_LOCK_ID = 746108325;
 
 type CachedIdentity = { identity: SealIdentity; source: string };
 
 declare global {
-  var __signudocSealIdentity: CachedIdentity | undefined;
+  var __yousignnowSealIdentity: CachedIdentity | undefined;
 }
 
 function encryptionKey(env: EnvSource, context: string = KEY_CONTEXT): Buffer {
@@ -66,7 +66,7 @@ function encryptionKey(env: EnvSource, context: string = KEY_CONTEXT): Buffer {
 
     // Local development without a password: nothing worth protecting.
     return Buffer.from(
-      hkdfSync("sha256", "signudoc-development", "", context, 32),
+      hkdfSync("sha256", "yousignnow-development", "", context, 32),
     );
   }
 
@@ -219,7 +219,7 @@ export async function getSealIdentity({
   database = getDb(),
   env = process.env,
 }: { database?: DbPool; env?: EnvSource } = {}): Promise<SealIdentity> {
-  const cached = globalThis.__signudocSealIdentity;
+  const cached = globalThis.__yousignnowSealIdentity;
 
   if (cached) {
     return cached.identity;
@@ -230,14 +230,14 @@ export async function getSealIdentity({
     ? { identity: fromEnvironment, source: "environment" }
     : await identityFromDatabase(env, database);
 
-  globalThis.__signudocSealIdentity = resolved;
+  globalThis.__yousignnowSealIdentity = resolved;
 
   return resolved.identity;
 }
 
 /** Forgets the loaded key, for tests. */
 export function resetSealIdentityCache() {
-  globalThis.__signudocSealIdentity = undefined;
+  globalThis.__yousignnowSealIdentity = undefined;
 }
 
 export type SealPurpose = "signed-document" | "certificate";

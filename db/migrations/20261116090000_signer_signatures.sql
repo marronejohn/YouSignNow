@@ -2,7 +2,7 @@
 -- electronic signatures under eIDAS, made by a signing provider (eID Easy, or
 -- a trust service provider with the Cloud Signature Consortium API).
 --
--- * envelopes.signature_level: simple (SignuDoc's own signature, sealed by
+-- * envelopes.signature_level: simple (YouSignNow's own signature, sealed by
 --   the install), advanced or qualified. Chosen when the envelope is sent,
 --   with the provider it was sent with.
 -- * envelopes.revision_key / revision_sha256: the PDF as the last signer

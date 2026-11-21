@@ -29,7 +29,7 @@ const createdUsers: string[] = [];
 before(async () => {
   database = await openTestDatabase();
   // The next signer's invitation reads the install's name through the shared pool.
-  globalThis.__signudocPgPool = database;
+  globalThis.__yousignnowPgPool = database;
 });
 
 after(async () => {

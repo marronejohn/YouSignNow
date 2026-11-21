@@ -7,8 +7,8 @@ import { resolvePublicSupportAddress } from "@/lib/public-contact";
 
 export const metadata: Metadata = {
   description:
-    "Review the terms that govern use of the SignuDoc public e-signature service.",
-  title: "Terms of Service | SignuDoc",
+    "Review the terms that govern use of the YouSignNow public e-signature service.",
+  title: "Terms of Service | YouSignNow",
 };
 
 export default async function TermsPage() {
@@ -18,7 +18,7 @@ export default async function TermsPage() {
 
   return (
     <PublicDocumentShell
-      description="These Terms of Service govern your access to and use of SignuDoc. They are written for a launch-stage U.S. e-signature product intended for ordinary business agreements and commercial workflows."
+      description="These Terms of Service govern your access to and use of YouSignNow. They are written for a launch-stage U.S. e-signature product intended for ordinary business agreements and commercial workflows."
       lastUpdated="March 21, 2026"
       title="Terms of Service"
     >
@@ -28,19 +28,19 @@ export default async function TermsPage() {
         </h2>
         <p>
           By creating an account, uploading a document, sending an envelope, or
-          signing through SignuDoc, you agree to these Terms. If you use
-          SignuDoc on behalf of a company or other organization, you represent
+          signing through YouSignNow, you agree to these Terms. If you use
+          YouSignNow on behalf of a company or other organization, you represent
           that you are authorized to bind that organization to these Terms.
         </p>
         <p>
-          SignuDoc provides software for preparing, sending, signing, and
-          storing electronic records. SignuDoc is not a law firm, is not your
+          YouSignNow provides software for preparing, sending, signing, and
+          storing electronic records. YouSignNow is not a law firm, is not your
           lawyer, does not give legal advice, and does not determine whether a
           particular document is legally suitable for electronic signing in any
           jurisdiction.
         </p>
         <p>
-          SignuDoc is currently offered for use by U.S.-based businesses and
+          YouSignNow is currently offered for use by U.S.-based businesses and
           organizations.
         </p>
       </section>
@@ -50,7 +50,7 @@ export default async function TermsPage() {
           2. Eligibility and authority
         </h2>
         <p>
-          You may use SignuDoc only if you can form a binding contract under
+          You may use YouSignNow only if you can form a binding contract under
           applicable law and only for lawful business or organizational
           purposes. You are responsible for making sure that each sender,
           signer, and recipient has authority to act for the party they
@@ -59,7 +59,7 @@ export default async function TermsPage() {
         <p>
           You are also responsible for determining whether your transaction
           requires witnesses, notarization, paper delivery, special retention
-          rules, or a signature form that SignuDoc does not provide.
+          rules, or a signature form that YouSignNow does not provide.
         </p>
       </section>
 
@@ -68,14 +68,14 @@ export default async function TermsPage() {
           3. Permitted use and excluded documents
         </h2>
         <p>
-          SignuDoc is intended for ordinary business agreements and comparable
+          YouSignNow is intended for ordinary business agreements and comparable
           commercial records, such as NDAs, statements of work, vendor
           agreements, service agreements, procurement approvals, and similar
           business documents.
         </p>
         <p>
-          You must not use SignuDoc for documents or notices that are excluded
-          from SignuDoc&apos;s permitted scope, including:
+          You must not use YouSignNow for documents or notices that are excluded
+          from YouSignNow&apos;s permitted scope, including:
         </p>
         <ul className="list-disc space-y-2 pl-6">
           <li>wills, codicils, and testamentary trusts;</li>
@@ -114,8 +114,8 @@ export default async function TermsPage() {
         <p>
           If a document falls into a regulated, safety-sensitive, consumer
           disclosure, estate-planning, court, or family-law category, do not use
-          SignuDoc for that workflow. By sending an envelope, you confirm that
-          the document is an ordinary business agreement within SignuDoc&apos;s
+          YouSignNow for that workflow. By sending an envelope, you confirm that
+          the document is an ordinary business agreement within YouSignNow&apos;s
           permitted use.
         </p>
       </section>
@@ -135,7 +135,7 @@ export default async function TermsPage() {
           You are responsible for maintaining accurate signer contact
           information, avoiding misleading or deceptive envelopes, and making
           sure that any required notices, disclosures, or offline procedures are
-          handled outside SignuDoc when needed.
+          handled outside YouSignNow when needed.
         </p>
       </section>
 
@@ -144,15 +144,15 @@ export default async function TermsPage() {
           5. Electronic signatures and records
         </h2>
         <p>
-          For documents within SignuDoc&apos;s permitted scope, SignuDoc is
+          For documents within YouSignNow&apos;s permitted scope, YouSignNow is
           designed to support standard electronic signatures and records used in
           the United States under laws such as the Electronic Signatures in
           Global and National Commerce Act (E-SIGN) and state electronic
           transactions laws such as UETA, where applicable.
         </p>
         <p>
-          SignuDoc does not provide qualified electronic signatures under eIDAS
-          and does not promise that a SignuDoc workflow will satisfy any
+          YouSignNow does not provide qualified electronic signatures under eIDAS
+          and does not promise that a YouSignNow workflow will satisfy any
           country-specific trust-service, certificate, identity-proofing, or
           notarization regime outside the ordinary U.S. electronic-signature
           context.
@@ -165,14 +165,14 @@ export default async function TermsPage() {
         </h2>
         <p>
           You are responsible for safeguarding your credentials, restricting
-          access to your account, and promptly notifying SignuDoc if you suspect
-          unauthorized use. You may not use SignuDoc to break the law, infringe
+          access to your account, and promptly notifying YouSignNow if you suspect
+          unauthorized use. You may not use YouSignNow to break the law, infringe
           rights, transmit malware, harass recipients, scrape data, interfere
           with service operation, or attempt to bypass access controls or rate
           limits.
         </p>
         <p>
-          You may not use SignuDoc to impersonate another person, to collect
+          You may not use YouSignNow to impersonate another person, to collect
           signatures through deception, or to send spam or bulk messages that do
           not relate to an actual signing workflow.
         </p>
@@ -183,7 +183,7 @@ export default async function TermsPage() {
           7. Service changes, availability, and records
         </h2>
         <p>
-          SignuDoc may change, improve, suspend, or discontinue features at any
+          YouSignNow may change, improve, suspend, or discontinue features at any
           time. We may introduce limits on document size, signer count, storage,
           or retention as the service evolves. We may also remove content or
           suspend accounts that appear to violate these Terms or create legal,
@@ -191,7 +191,7 @@ export default async function TermsPage() {
         </p>
         <p>
           You should download and retain your own copies of important completed
-          documents. SignuDoc&apos;s hosted document storage is a convenience
+          documents. YouSignNow&apos;s hosted document storage is a convenience
           feature and is subject to the retention and deletion practices
           described in the Privacy Policy.
         </p>
@@ -202,13 +202,13 @@ export default async function TermsPage() {
           8. Intellectual property and your content
         </h2>
         <p>
-          As between you and SignuDoc, you retain ownership of the documents and
-          data you upload, subject to the rights needed for SignuDoc and its
+          As between you and YouSignNow, you retain ownership of the documents and
+          data you upload, subject to the rights needed for YouSignNow and its
           service providers to host, process, transmit, display, secure, and
           store that content to operate the service.
         </p>
         <p>
-          SignuDoc and its branding, software, interface, and related materials
+          YouSignNow and its branding, software, interface, and related materials
           are protected by applicable intellectual-property laws. Except as
           expressly allowed by law, you may not copy, resell, reverse engineer,
           or create derivative works from the service.
@@ -220,7 +220,7 @@ export default async function TermsPage() {
           9. Suspension, termination, and account closure
         </h2>
         <p>
-          You may stop using the service at any time. SignuDoc may suspend or
+          You may stop using the service at any time. YouSignNow may suspend or
           terminate access if we reasonably believe that you violated these
           Terms, used the service outside its permitted scope, or created
           security, fraud, or legal risk.
@@ -235,7 +235,7 @@ export default async function TermsPage() {
             {supportAddress}
           </Link>
           . Before closing your account, download any documents you want to
-          keep. After closure, SignuDoc may provide a limited export window and
+          keep. After closure, YouSignNow may provide a limited export window and
           then delete stored document files and related envelope records, except
           limited information kept for security, fraud prevention, legal
           compliance, or dispute resolution.
@@ -247,8 +247,8 @@ export default async function TermsPage() {
           10. Disclaimers
         </h2>
         <p>
-          SignuDoc is provided on an &quot;as is&quot; and &quot;as
-          available&quot; basis to the maximum extent permitted by law. SignuDoc
+          YouSignNow is provided on an &quot;as is&quot; and &quot;as
+          available&quot; basis to the maximum extent permitted by law. YouSignNow
           disclaims all warranties, whether express, implied, statutory, or
           otherwise, including implied warranties of merchantability, fitness
           for a particular purpose, title, noninfringement, accuracy,
@@ -256,7 +256,7 @@ export default async function TermsPage() {
           transaction.
         </p>
         <p>
-          SignuDoc does not warrant that a particular workflow will be valid in
+          YouSignNow does not warrant that a particular workflow will be valid in
           court, accepted by a regulator, or appropriate for a regulated or
           excluded document type. You should obtain legal advice for questions
           about document enforceability, retention, consumer disclosures,
@@ -269,7 +269,7 @@ export default async function TermsPage() {
           11. Limitation of liability
         </h2>
         <p>
-          To the maximum extent permitted by law, SignuDoc and its affiliates,
+          To the maximum extent permitted by law, YouSignNow and its affiliates,
           service providers, licensors, and personnel will not be liable for any
           indirect, incidental, special, consequential, exemplary, or punitive
           damages, or for any loss of profits, revenue, goodwill, data, or use,
@@ -277,9 +277,9 @@ export default async function TermsPage() {
         </p>
         <p>
           To the maximum extent permitted by law, the aggregate liability of
-          SignuDoc for all claims arising out of or relating to the service or
+          YouSignNow for all claims arising out of or relating to the service or
           these Terms will not exceed the greater of the amount you paid
-          SignuDoc for the service during the 12 months before the event giving
+          YouSignNow for the service during the 12 months before the event giving
           rise to the claim or one hundred U.S. dollars (US$100).
         </p>
       </section>
@@ -289,7 +289,7 @@ export default async function TermsPage() {
           12. Indemnification
         </h2>
         <p>
-          You will defend, indemnify, and hold harmless SignuDoc and its
+          You will defend, indemnify, and hold harmless YouSignNow and its
           affiliates, service providers, licensors, and personnel from and
           against claims, losses, damages, liabilities, costs, and expenses
           (including reasonable attorneys&apos; fees) arising out of or relating
@@ -305,13 +305,13 @@ export default async function TermsPage() {
         <p>
           Except where applicable law requires otherwise, these Terms are
           governed by applicable U.S. federal law and the law of the state in
-          which the SignuDoc operator is organized, without regard to
-          conflict-of-law rules. You and SignuDoc agree to the exclusive venue
+          which the YouSignNow operator is organized, without regard to
+          conflict-of-law rules. You and YouSignNow agree to the exclusive venue
           of the state or federal courts serving that location for disputes that
           may be brought in court.
         </p>
         <p>
-          SignuDoc may update these Terms from time to time by posting a revised
+          YouSignNow may update these Terms from time to time by posting a revised
           version on this page. The updated Terms will apply when posted unless
           a later effective date is stated.
         </p>

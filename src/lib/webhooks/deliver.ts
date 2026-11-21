@@ -556,7 +556,7 @@ export async function sendTestWebhook(
   const now = nowInSeconds();
   const id = `msg_${randomUUID().replaceAll("-", "")}`;
   const payload: WebhookPayload = {
-    data: { message: "A test event from SignuDoc. No envelope changed." },
+    data: { message: "A test event from YouSignNow. No envelope changed." },
     timestamp: new Date(now * 1000).toISOString(),
     type: WEBHOOK_TEST_EVENT,
   };

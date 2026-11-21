@@ -1,7 +1,7 @@
 import { SigningDoneShell } from "@/components/signing/signing-done-shell";
 
 // Where an embedded signer lands after signing. The page that frames it was
-// told already (signudoc:signed); this is what the signer sees meanwhile.
+// told already (yousignnow:signed); this is what the signer sees meanwhile.
 
 type EmbedSignDonePageProps = {
   searchParams?: Promise<{ title?: string | string[] }>;

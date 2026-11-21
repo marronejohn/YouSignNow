@@ -20,7 +20,7 @@ import {
 const EMAIL_ENV_KEYS = ["RESEND_API_KEY"] as const;
 
 const DEFAULT_CAPTURE_DIR = ".data/outbox";
-const DEFAULT_CAPTURE_SENDER_ADDRESS = "dev@signudoc.localhost";
+const DEFAULT_CAPTURE_SENDER_ADDRESS = "dev@yousignnow.localhost";
 
 export type EmailDriver = "capture" | "resend";
 

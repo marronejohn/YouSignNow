@@ -13,7 +13,7 @@ test("only a domain an organization could own is offered for sending", () => {
   assert.equal(isOwnableDomain("kevinrose.com"), true);
   assert.equal(isOwnableDomain("mail.acme.co.uk"), true);
   assert.equal(isOwnableDomain("gmail.com"), false);
-  assert.equal(isOwnableDomain("signudoc-abc.vercel.app"), false);
+  assert.equal(isOwnableDomain("yousignnow-abc.vercel.app"), false);
   assert.equal(isOwnableDomain("onboarding.resend.dev"), false);
   assert.equal(isOwnableDomain("localhost"), false);
   assert.equal(isOwnableDomain("127.0.0.1"), false);
@@ -41,7 +41,7 @@ test("on a vercel.app address the emails decide, skipping public mailboxes", () 
   assert.equal(
     suggestSendingRootDomain({
       emails: ["kro@gmail.com", "help@kevinrose.com"],
-      siteHost: "signudoc-kro.vercel.app",
+      siteHost: "yousignnow-kro.vercel.app",
     }),
     "kevinrose.com",
   );

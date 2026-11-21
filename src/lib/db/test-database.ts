@@ -13,7 +13,7 @@ import {
 // end-to-end test does on every run anyway.
 
 const DEFAULT_TEST_DATABASE_URL =
-  "postgres://signudoc:signudoc@127.0.0.1:5432/signudoc_e2e";
+  "postgres://yousignnow:yousignnow@127.0.0.1:5432/yousignnow_e2e";
 
 async function ensureDatabaseExists(connectionString: string, name: string) {
   const maintenanceUrl = new URL(connectionString);

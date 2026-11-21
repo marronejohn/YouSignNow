@@ -92,7 +92,7 @@ export function SigningShell({
     <>
       {embedOrigin ? (
         <EmbedParentMessage
-          message={{ state, type: "signudoc:error" }}
+          message={{ state, type: "yousignnow:error" }}
           origin={embedOrigin}
         />
       ) : null}

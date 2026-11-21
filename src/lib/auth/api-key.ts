@@ -35,7 +35,7 @@ export async function requireApiKey(
 
   if (!presented) {
     return apiError(401, "unauthorized", UNAUTHORIZED_MESSAGE, {
-      "www-authenticate": 'Bearer realm="signudoc"',
+      "www-authenticate": 'Bearer realm="yousignnow"',
     });
   }
 
@@ -144,7 +144,7 @@ async function refuseBadKey(
   });
 
   return apiError(401, "unauthorized", UNAUTHORIZED_MESSAGE, {
-    "www-authenticate": 'Bearer realm="signudoc", error="invalid_token"',
+    "www-authenticate": 'Bearer realm="yousignnow", error="invalid_token"',
   });
 }
 

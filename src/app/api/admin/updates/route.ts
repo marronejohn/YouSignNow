@@ -9,7 +9,7 @@ import {
 import { getClientIpAddress, getRequestPathname } from "@/lib/security/request";
 import { checkForUpdate, getUpdateStatus } from "@/lib/software-update";
 
-// "Check for updates" in the SignuDoc section of Settings: whether a newer
+// "Check for updates" in the YouSignNow section of Settings: whether a newer
 // release than the running version has been published. The page itself
 // shows the running version without asking GitHub.
 

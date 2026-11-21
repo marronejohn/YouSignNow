@@ -45,7 +45,7 @@ export function webhookHeaders(
 ): Record<string, string> {
   return {
     "content-type": "application/json",
-    "user-agent": "SignuDoc-Webhooks/1",
+    "user-agent": "YouSignNow-Webhooks/1",
     "webhook-id": input.id,
     "webhook-signature": secrets
       .map((secret) => signWebhook(secret, input))

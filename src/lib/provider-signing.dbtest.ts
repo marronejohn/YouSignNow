@@ -85,8 +85,8 @@ function setEnv(values: Record<string, string | undefined>) {
 before(async () => {
   database = await openTestDatabase();
   // The invitation email reads the install's name through the shared pool.
-  globalThis.__signudocPgPool = database;
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-provider-"));
+  globalThis.__yousignnowPgPool = database;
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-provider-"));
   resetValidationCache();
   pki = await startTestPki();
 

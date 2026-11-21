@@ -12,7 +12,7 @@ const { version } = JSON.parse(readFileSync("./package.json", "utf8")) as {
 
 const nextConfig: NextConfig = {
   env: {
-    NEXT_PUBLIC_SIGNUDOC_VERSION: version,
+    NEXT_PUBLIC_YOUSIGNNOW_VERSION: version,
     // Whether Vercel BotID is on, decided once at build time so the browser
     // code that adds its proof and the server code that checks it cannot
     // disagree. It only works on Vercel, and is opt-in with BOTID=1. See

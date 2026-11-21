@@ -23,7 +23,7 @@ let administratorsBefore: string[] = [];
 
 before(async () => {
   database = await openTestDatabase();
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-people-"));
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-people-"));
 
   // The rule under test is about every administrator in the database, so
   // the ones other tests left behind step aside while this file runs.

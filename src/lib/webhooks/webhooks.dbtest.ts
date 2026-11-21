@@ -78,7 +78,7 @@ before(async () => {
   // Endpoints left by a run that stopped part way would count toward the
   // cap of 10, so start from none, as afterEach leaves it.
   await database.query(`delete from webhook_endpoints`);
-  workDir = await mkdtemp(path.join(tmpdir(), "signudoc-webhooks-"));
+  workDir = await mkdtemp(path.join(tmpdir(), "yousignnow-webhooks-"));
 
   for (const name of SETTINGS) {
     settingsBefore.set(name, process.env[name]);
@@ -87,7 +87,7 @@ before(async () => {
   process.env.APP_URL = "http://localhost:3000";
   process.env.DATABASE_URL =
     process.env.E2E_DATABASE_URL ??
-    "postgres://signudoc:signudoc@127.0.0.1:5432/signudoc_e2e";
+    "postgres://yousignnow:yousignnow@127.0.0.1:5432/yousignnow_e2e";
   process.env.EMAIL_CAPTURE_DIR = path.join(workDir, "outbox");
   process.env.EMAIL_DRIVER = "capture";
   process.env.STORAGE_DRIVER = "local";

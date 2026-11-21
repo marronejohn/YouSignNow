@@ -36,12 +36,12 @@ type MemoryEntry = {
 };
 
 declare global {
-  var __signudocRateLimitStore: Map<string, MemoryEntry> | undefined;
-  var __signudocRateLimitSweepAt: number | undefined;
-  var __signudocRateLimitWarnedAt: number | undefined;
+  var __yousignnowRateLimitStore: Map<string, MemoryEntry> | undefined;
+  var __yousignnowRateLimitSweepAt: number | undefined;
+  var __yousignnowRateLimitWarnedAt: number | undefined;
 }
 
-const memoryStore = (globalThis.__signudocRateLimitStore ??= new Map<
+const memoryStore = (globalThis.__yousignnowRateLimitStore ??= new Map<
   string,
   MemoryEntry
 >());
@@ -72,7 +72,7 @@ function toDecision(
 }
 
 function sweepMemoryStore(now: number) {
-  if ((globalThis.__signudocRateLimitSweepAt ?? 0) > now) {
+  if ((globalThis.__yousignnowRateLimitSweepAt ?? 0) > now) {
     return;
   }
 
@@ -82,7 +82,7 @@ function sweepMemoryStore(now: number) {
     }
   }
 
-  globalThis.__signudocRateLimitSweepAt = now + MEMORY_SWEEP_INTERVAL_MS;
+  globalThis.__yousignnowRateLimitSweepAt = now + MEMORY_SWEEP_INTERVAL_MS;
 }
 
 /** The same counting as the database does, for one instance only. */
@@ -107,11 +107,11 @@ export function consumeRateLimitInMemory(
 function warnAboutFallback(error: unknown) {
   const now = Date.now();
 
-  if ((globalThis.__signudocRateLimitWarnedAt ?? 0) > now) {
+  if ((globalThis.__yousignnowRateLimitWarnedAt ?? 0) > now) {
     return;
   }
 
-  globalThis.__signudocRateLimitWarnedAt = now + FALLBACK_WARNING_INTERVAL_MS;
+  globalThis.__yousignnowRateLimitWarnedAt = now + FALLBACK_WARNING_INTERVAL_MS;
   console.warn(
     "[rate-limit] Counting in memory because the database could not be used:",
     error instanceof Error ? error.message : error,
@@ -254,6 +254,6 @@ export async function clearRateLimit(
 
 export function clearRateLimitStoreForTests() {
   memoryStore.clear();
-  globalThis.__signudocRateLimitSweepAt = undefined;
-  globalThis.__signudocRateLimitWarnedAt = undefined;
+  globalThis.__yousignnowRateLimitSweepAt = undefined;
+  globalThis.__yousignnowRateLimitWarnedAt = undefined;
 }

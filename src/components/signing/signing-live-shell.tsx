@@ -861,7 +861,7 @@ export function SigningLiveShell({
         postToEmbedParent(embedOrigin, {
           envelopeId: record.envelopeId,
           signerId: record.signer.id,
-          type: "signudoc:signed",
+          type: "yousignnow:signed",
         });
       }
 
@@ -942,7 +942,7 @@ export function SigningLiveShell({
         postToEmbedParent(embedOrigin, {
           envelopeId: record.envelopeId,
           signerId: record.signer.id,
-          type: "signudoc:declined",
+          type: "yousignnow:declined",
         });
       }
 

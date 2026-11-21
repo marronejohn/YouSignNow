@@ -38,7 +38,7 @@ export const SMS_CODE_TTL_SECONDS = 10 * 60;
 export const SMS_CODE_MAX_ATTEMPTS = 5;
 export const SMS_CODE_RESEND_SECONDS = 60;
 const VERIFICATION_COOKIE_TTL_SECONDS = 8 * 60 * 60;
-const COOKIE_CONTEXT = "signudoc/signer-verification/v1";
+const COOKIE_CONTEXT = "yousignnow/signer-verification/v1";
 
 export type SignerCheckState = {
   accessCodeHash: string | null;
@@ -219,7 +219,7 @@ function cookieSecret(): string {
     );
   }
 
-  return "signudoc-development-only";
+  return "yousignnow-development-only";
 }
 
 export function verificationCookieName(signingTokenHash: string): string {

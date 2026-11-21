@@ -14,8 +14,8 @@ import { parseEmbedOrigin } from "./embed-origin.ts";
 
 export { httpEmbedOriginsAllowed, parseEmbedOrigin } from "./embed-origin.ts";
 
-// Embedded signing: an app shows SignuDoc's signing page inside its own
-// site, in a frame, instead of SignuDoc emailing the signer a link. See
+// Embedded signing: an app shows YouSignNow's signing page inside its own
+// site, in a frame, instead of YouSignNow emailing the signer a link. See
 // db/migrations/20261118120000_embedded_signing.sql and
 // 20261118120500_embed_link_api_key.sql.
 //

@@ -82,8 +82,8 @@ test("an install with no name, and the hosted service, send as YouSignNow", () =
 
 test("the capture driver's fallback address is used when one is given", () => {
   assert.equal(
-    buildEmailAddresses(base, "dev@signudoc.localhost").senderAddress,
-    "Acme Corp <dev@signudoc.localhost>",
+    buildEmailAddresses(base, "dev@yousignnow.localhost").senderAddress,
+    "Acme Corp <dev@yousignnow.localhost>",
   );
 });
 

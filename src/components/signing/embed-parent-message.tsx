@@ -10,7 +10,7 @@ export type EmbedMessage = {
   envelopeId?: string;
   signerId?: string;
   state?: string;
-  type: "signudoc:declined" | "signudoc:error" | "signudoc:signed";
+  type: "yousignnow:declined" | "yousignnow:error" | "yousignnow:signed";
 };
 
 export function postToEmbedParent(origin: string, message: EmbedMessage) {

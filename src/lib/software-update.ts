@@ -1,15 +1,15 @@
-// Whether a newer SignuDoc has been released, for the SignuDoc section of
+// Whether a newer YouSignNow has been released, for the YouSignNow section of
 // Settings. The running version is baked in at build time (next.config.ts);
 // the latest one is the newest GitHub Release of the project, read from
 // GitHub's public API without a token. That API allows 60 requests an hour
 // per address, and a Vercel function shares its address with others, so the
 // answer is kept for a while and a failure is reported, never thrown.
 
-export const UPSTREAM_OWNER = "NYLLON-SOFTWARE";
-export const UPSTREAM_REPO = "SignuDoc";
+export const UPSTREAM_OWNER = "marronejohn";
+export const UPSTREAM_REPO = "YouSignNow";
 export const UPSTREAM_SLUG = `${UPSTREAM_OWNER}/${UPSTREAM_REPO}`;
 export const UPSTREAM_RELEASES_URL = `https://github.com/${UPSTREAM_SLUG}/releases`;
-export const UPDATE_WORKFLOW_FILE = "update-signudoc.yml";
+export const UPDATE_WORKFLOW_FILE = "update-yousignnow.yml";
 export const UPDATE_WORKFLOW_PATH = `.github/workflows/${UPDATE_WORKFLOW_FILE}`;
 export const UPDATE_DOCS_URL = `https://github.com/${UPSTREAM_SLUG}/blob/main/docs/self-hosting.md#keep-your-install-up-to-date`;
 export const UPDATE_WORKFLOW_SOURCE_URL = `https://raw.githubusercontent.com/${UPSTREAM_SLUG}/main/${UPDATE_WORKFLOW_PATH}`;
@@ -72,8 +72,8 @@ type Env = Record<string, string | undefined>;
 export function getRunningVersion(env?: Env): string {
   // Spelled out in full so the build can put the value in its place.
   const value = env
-    ? env.NEXT_PUBLIC_SIGNUDOC_VERSION
-    : process.env.NEXT_PUBLIC_SIGNUDOC_VERSION;
+    ? env.NEXT_PUBLIC_YOUSIGNNOW_VERSION
+    : process.env.NEXT_PUBLIC_YOUSIGNNOW_VERSION;
 
   return value?.trim() || "0.0.0";
 }
@@ -198,7 +198,7 @@ export function toReleaseInfo(payload: unknown): ReleaseInfo | null {
   const name =
     typeof record.name === "string" && record.name.trim()
       ? record.name.trim()
-      : `SignuDoc ${version}`;
+      : `YouSignNow ${version}`;
 
   return {
     name: name.slice(0, 200),
@@ -216,11 +216,11 @@ export function toReleaseInfo(payload: unknown): ReleaseInfo | null {
 type CacheEntry = { expiresAt: number; value: UpdateCheck };
 
 const cacheHolder = globalThis as typeof globalThis & {
-  __signudocUpdateCheck?: CacheEntry;
+  __yousignnowUpdateCheck?: CacheEntry;
 };
 
 export function clearUpdateCheckCache() {
-  delete cacheHolder.__signudocUpdateCheck;
+  delete cacheHolder.__yousignnowUpdateCheck;
 }
 
 /**
@@ -237,7 +237,7 @@ export async function checkForUpdate({
   fetchImpl?: typeof fetch;
   now?: () => number;
 } = {}): Promise<UpdateCheck> {
-  const cached = cacheHolder.__signudocUpdateCheck;
+  const cached = cacheHolder.__yousignnowUpdateCheck;
 
   if (cached && cached.expiresAt > now() && cached.value.current === current) {
     return cached.value;
@@ -245,7 +245,7 @@ export async function checkForUpdate({
 
   const value = await fetchLatest(current, fetchImpl, now);
 
-  cacheHolder.__signudocUpdateCheck = {
+  cacheHolder.__yousignnowUpdateCheck = {
     expiresAt: now() + (value.ok ? SUCCESS_TTL_MS : FAILURE_TTL_MS),
     value,
   };
@@ -273,7 +273,7 @@ async function fetchLatest(
       cache: "no-store",
       headers: {
         accept: "application/vnd.github+json",
-        "user-agent": "SignuDoc-update-check",
+        "user-agent": "YouSignNow-update-check",
         "x-github-api-version": "2022-11-28",
       },
       signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
@@ -283,7 +283,7 @@ async function fetchLatest(
   }
 
   if (response.status === 404) {
-    return fail("SignuDoc has no published release yet.");
+    return fail("YouSignNow has no published release yet.");
   }
 
   if (response.status === 403 || response.status === 429) {

@@ -855,7 +855,7 @@ async function recordViewedEventOnce(
     // record two first views (and send two signer.viewed webhooks). This
     // lock is taken only here, before any other, so it cannot deadlock.
     await tx.query(`SELECT pg_advisory_xact_lock(hashtextextended($1, 0))`, [
-      `signudoc:first-view:${context.signer.id ?? ""}`,
+      `yousignnow:first-view:${context.signer.id ?? ""}`,
     ]);
 
     const existing = await queryOne<{ id: string }>(

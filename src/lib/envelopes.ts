@@ -462,7 +462,7 @@ export type EnvelopeDetailData = {
   /** Sent in Part 11 mode: a void needs a reason. */
   part11: boolean;
   /**
-   * How signers sign, when not with SignuDoc's own simple signature: for
+   * How signers sign, when not with YouSignNow's own simple signature: for
    * example "Qualified electronic signatures through eID Easy".
    */
   signatureTypeLabel: string | null;
@@ -2629,7 +2629,7 @@ export async function sendDraftEnvelope(
   // the two are not combined.
   const signatureLevel = input.signatureLevel ?? "simple";
 
-  // Signing at the same time is for SignuDoc's own simple signatures.
+  // Signing at the same time is for YouSignNow's own simple signatures.
   //
   // * Part 11 mode keeps one signer after another. Its validation
   //   (docs/part11, SYS-08 and OQ-06) is written for that order, and a

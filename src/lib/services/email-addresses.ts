@@ -1,4 +1,4 @@
-import { SIGNUDOC_NAME } from "../branding.ts";
+import { YOUSIGNNOW_NAME } from "../branding.ts";
 import { truncateToWholeCharacters } from "../text-truncate.ts";
 
 // Which addresses email is sent from and replied to.
@@ -59,7 +59,7 @@ function cleanDisplayName(value: string | null): string {
     80,
   ).trimEnd();
 
-  return cleaned || SIGNUDOC_NAME;
+  return cleaned || YOUSIGNNOW_NAME;
 }
 
 function hasDisplayName(value: string): boolean {
@@ -72,7 +72,7 @@ export function buildEmailAddresses(
 ): EmailAddresses {
   const configuredSender = settings.senderAddress?.trim() || null;
   const displayName = cleanDisplayName(
-    settings.hosted ? SIGNUDOC_NAME : settings.organizationName,
+    settings.hosted ? YOUSIGNNOW_NAME : settings.organizationName,
   );
   let senderAddress: string;
 

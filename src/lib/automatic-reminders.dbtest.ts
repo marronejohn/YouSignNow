@@ -40,7 +40,7 @@ const createdUsers: string[] = [];
 before(async () => {
   database = await openTestDatabase();
   // The reminder email reads the install's name through the shared pool.
-  globalThis.__signudocPgPool = database;
+  globalThis.__yousignnowPgPool = database;
 });
 
 after(async () => {

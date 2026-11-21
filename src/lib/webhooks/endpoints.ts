@@ -29,7 +29,7 @@ export const MAX_WEBHOOK_ENDPOINTS = 10;
 /** How long the old secret keeps signing after a rotation. */
 export const SECRET_ROTATION_OVERLAP_SECONDS = 24 * 60 * 60;
 
-const SECRET_CONTEXT = "signudoc/webhook-secret/v1";
+const SECRET_CONTEXT = "yousignnow/webhook-secret/v1";
 
 export class WebhookEndpointError extends Error {
   readonly statusCode: number;

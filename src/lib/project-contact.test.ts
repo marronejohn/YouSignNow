@@ -4,7 +4,7 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { test } from "node:test";
 
-// SignuDoc is run by whoever deploys it. The project keeps no site and no
+// YouSignNow is run by whoever deploys it. The project keeps no site and no
 // mailbox of its own, so nothing in the repository may send a person or a
 // message to one. An install's contact address is the one its administrator
 // gave at setup, and reports about the project itself go through GitHub.
@@ -13,7 +13,7 @@ const repoRoot = path.resolve(import.meta.dirname, "..", "..");
 
 // The domain the project once ran a hosted site on. Written in two parts
 // so that this file does not name it either.
-const formerHostedDomain = ["signudoc", "app"].join(".");
+const formerHostedDomain = ["yousignnow", "app"].join(".");
 
 const SKIPPED_DIRECTORIES = new Set([
   ".data",
@@ -92,7 +92,7 @@ test("security reports go through GitHub, not to an email address", () => {
 
   assert.ok(
     readFileSync(path.join(repoRoot, "SECURITY.md"), "utf8").includes(
-      "https://github.com/NYLLON-SOFTWARE/SignuDoc/security/advisories/new",
+      "https://github.com/marronejohn/YouSignNow/security/advisories/new",
     ),
   );
 });

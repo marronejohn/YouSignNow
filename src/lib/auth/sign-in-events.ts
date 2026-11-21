@@ -184,7 +184,7 @@ export function signInEvents() {
   const secondStepWithSession = new WeakMap<Request, boolean>();
 
   return {
-    id: "signudoc-sign-in-events",
+    id: "yousignnow-sign-in-events",
     hooks: {
       before: [
         {

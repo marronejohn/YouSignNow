@@ -10,7 +10,7 @@ import { getEnv } from "../utils/env.ts";
 import { requireConfigValue } from "../services/service-config.ts";
 
 declare global {
-  var __signudocPgPool: Pool | undefined;
+  var __yousignnowPgPool: Pool | undefined;
 }
 
 // Parse bigint values into numbers because this app stores timestamps and counts
@@ -27,14 +27,14 @@ export function getDb(): Pool {
     return cachedPool;
   }
 
-  if (globalThis.__signudocPgPool) {
-    cachedPool = globalThis.__signudocPgPool;
+  if (globalThis.__yousignnowPgPool) {
+    cachedPool = globalThis.__yousignnowPgPool;
     return cachedPool;
   }
 
   const isOnVercel = process.env.VERCEL === "1";
   const pool = new Pool({
-    application_name: "signudoc",
+    application_name: "yousignnow",
     connectionString: requireConfigValue(
       "database",
       "DATABASE_URL",
@@ -58,7 +58,7 @@ export function getDb(): Pool {
   }
 
   if (process.env.NODE_ENV !== "production") {
-    globalThis.__signudocPgPool = pool;
+    globalThis.__yousignnowPgPool = pool;
   }
 
   cachedPool = pool;
@@ -73,7 +73,7 @@ export function replaceDbPoolForTests(pool: Pool): Pool | null {
   const replaced = cachedPool;
 
   cachedPool = pool;
-  globalThis.__signudocPgPool = pool;
+  globalThis.__yousignnowPgPool = pool;
 
   return replaced;
 }

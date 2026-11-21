@@ -40,7 +40,7 @@ async function clearRation() {
 
 before(async () => {
   database = await openTestDatabase();
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-retention-"));
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-retention-"));
 });
 
 after(async () => {

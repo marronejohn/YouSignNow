@@ -44,8 +44,8 @@ test("webhook URLs must be public https", () => {
   const env = {};
 
   assert.equal(
-    parseWebhookUrl("https://hooks.example.com/signudoc#x", env).toString(),
-    "https://hooks.example.com/signudoc",
+    parseWebhookUrl("https://hooks.example.com/yousignnow#x", env).toString(),
+    "https://hooks.example.com/yousignnow",
   );
 
   for (const bad of [
@@ -97,7 +97,7 @@ test("a name that resolves to a private address is never called", async () => {
   ]) {
     let asked = 0;
     const result = await postWebhook(
-      "https://hooks.example.test/signudoc",
+      "https://hooks.example.test/yousignnow",
       { body: "{}", headers: {} },
       {
         env: {},
@@ -136,7 +136,7 @@ test("the request goes to the address that was checked", async () => {
     // The name exists nowhere but in this lookup, so reaching the server
     // proves the connection used the address the guard was given.
     const result = await postWebhook(
-      `http://hooks.example.test:${String(port)}/signudoc`,
+      `http://hooks.example.test:${String(port)}/yousignnow`,
       { body: "{}", headers: {} },
       {
         env: { WEBHOOK_ALLOW_PRIVATE_URLS: "1" },

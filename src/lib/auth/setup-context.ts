@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 
 declare global {
-  var __signudocSetupStorage: AsyncLocalStorage<true> | undefined;
+  var __yousignnowSetupStorage: AsyncLocalStorage<true> | undefined;
 }
 
 // First-run setup creates the administrator through the same sign-up code as
@@ -11,7 +11,7 @@ declare global {
 //
 // Kept on globalThis so the setup route and the auth code read the same
 // store even if a bundler gives each its own copy of this module.
-const setupStorage = (globalThis.__signudocSetupStorage ??=
+const setupStorage = (globalThis.__yousignnowSetupStorage ??=
   new AsyncLocalStorage<true>());
 
 export function runAsSetup<T>(run: () => Promise<T>): Promise<T> {

@@ -46,8 +46,8 @@ before(async () => {
   database = await openTestDatabase();
   // The seal and the emails read the install's settings through the shared
   // pool.
-  globalThis.__signudocPgPool = database;
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-spent-link-"));
+  globalThis.__yousignnowPgPool = database;
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-spent-link-"));
   Object.assign(process.env, {
     EMAIL_CAPTURE_DIR: path.join(storageDir, "outbox"),
     EMAIL_DRIVER: "capture",

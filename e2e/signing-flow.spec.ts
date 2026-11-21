@@ -248,8 +248,8 @@ test("a new install is set up, a sender sends a PDF and a recipient signs it", a
       // The product's own link goes to its repository. There is no site
       // run by the project to send anyone to.
       await expect(
-        footer.getByRole("link", { name: "Powered by SignuDoc" }),
-      ).toHaveAttribute("href", "https://github.com/NYLLON-SOFTWARE/SignuDoc");
+        footer.getByRole("link", { name: "Powered by YouSignNow" }),
+      ).toHaveAttribute("href", "https://github.com/marronejohn/YouSignNow");
     }
 
     // A signer with a question is sent to the organization's own address.
@@ -291,7 +291,7 @@ test("a new install is set up, a sender sends a PDF and a recipient signs it", a
 
     // Emails carry the organization's name, not the product's.
     expect(verificationEmail.text).toContain(
-      `Sent by ${ORGANIZATION_NAME} using SignuDoc.`,
+      `Sent by ${ORGANIZATION_NAME} using YouSignNow.`,
     );
 
     await page.goto(
@@ -1771,7 +1771,7 @@ test("an administrator makes an API key and a webhook, an app sends and download
 
   await test.step("a webhook endpoint is added in Settings, and its test event arrives signed", async () => {
     await page
-      .getByPlaceholder("https://app.example.com/webhooks/signudoc")
+      .getByPlaceholder("https://app.example.com/webhooks/yousignnow")
       .fill(receiver.url);
     await page
       .getByPlaceholder("What this endpoint is for")
@@ -2219,29 +2219,29 @@ test("an app shows the signing page in its own site, only on a site an administr
         portalPage.evaluate(() =>
           (
             window as unknown as {
-              signudocMessages: Array<{ data: { type?: string } }>;
+              yousignnowMessages: Array<{ data: { type?: string } }>;
             }
-          ).signudocMessages.map((message) => message.data.type),
+          ).yousignnowMessages.map((message) => message.data.type),
         ),
       )
-      .toContain("signudoc:signed");
+      .toContain("yousignnow:signed");
 
     const messages = await portalPage.evaluate(
       () =>
         (
           window as unknown as {
-            signudocMessages: Array<{ data: unknown; origin: string }>;
+            yousignnowMessages: Array<{ data: unknown; origin: string }>;
           }
-        ).signudocMessages,
+        ).yousignnowMessages,
     );
 
     expect(
       messages.find(
         (message) =>
-          (message.data as { type?: string }).type === "signudoc:signed",
+          (message.data as { type?: string }).type === "yousignnow:signed",
       ),
     ).toMatchObject({
-      data: { envelopeId, signerId, type: "signudoc:signed" },
+      data: { envelopeId, signerId, type: "yousignnow:signed" },
       origin: new URL(baseURL!).origin,
     });
     // The frame moves on to the embedded done page, still inside the app.

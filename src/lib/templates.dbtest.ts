@@ -47,7 +47,7 @@ const createdUsers: string[] = [];
 
 before(async () => {
   database = await openTestDatabase();
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-templates-"));
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-templates-"));
   storageService = createStorageService({
     env: { STORAGE_DRIVER: "local", STORAGE_LOCAL_DIR: storageDir },
   });

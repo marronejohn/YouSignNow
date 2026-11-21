@@ -389,7 +389,7 @@ async function persistReminder(
     // retire the link that app holds.
     if (persistedEnvelope.delivery === "embedded") {
       throw new ReminderMutationError(
-        "This envelope is signed in another app, so SignuDoc does not email its signers.",
+        "This envelope is signed in another app, so YouSignNow does not email its signers.",
         409,
       );
     }
@@ -679,7 +679,7 @@ export async function sendManualEnvelopeNudge(
   // would also retire the link that app holds.
   if (await isEmbeddedEnvelope(envelopeId, database, userId)) {
     throw new ReminderMutationError(
-      "This envelope is signed in another app, so SignuDoc does not email its signers.",
+      "This envelope is signed in another app, so YouSignNow does not email its signers.",
       409,
     );
   }

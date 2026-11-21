@@ -100,7 +100,7 @@ function assertNotFound(error: unknown): true {
 
 before(async () => {
   database = await openTestDatabase();
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-thumbnail-"));
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-thumbnail-"));
   storageService = createStorageService({
     env: { STORAGE_DRIVER: "local", STORAGE_LOCAL_DIR: storageDir },
   });

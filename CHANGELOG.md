@@ -363,15 +363,15 @@ change: this release needs no migration step.
 - **Check for updates** in Settings, YouSignNow (administrators only): shows
   the version the site runs, asks GitHub for the latest release, and shows
   what is new in it.
-- **Update YouSignNow workflow** (`.github/workflows/update-signudoc.yml`) in
+- **Update YouSignNow workflow** (`.github/workflows/update-yousignnow.yml`) in
   each copy: runs every Monday or by hand, merges the new release with the
-  copy on a `signudoc-update/<version>` branch and opens a pull request, so
+  copy on a `yousignnow-update/<version>` branch and opens a pull request, so
   Vercel builds a preview first. Changes you made to the code are kept; where
   you and YouSignNow changed the same lines it stops and lists the files. It
   never force-pushes.
-- Optional settings for the workflow: a `SIGNUDOC_UPDATE_TOKEN` secret so it
-  can update workflow files too, `SIGNUDOC_AUTO_MERGE=1` to merge clean
-  updates straight into production, and `SIGNUDOC_PRODUCTION_BRANCH` when
+- Optional settings for the workflow: a `YOUSIGNNOW_UPDATE_TOKEN` secret so it
+  can update workflow files too, `YOUSIGNNOW_AUTO_MERGE=1` to merge clean
+  updates straight into production, and `YOUSIGNNOW_PRODUCTION_BRANCH` when
   Vercel deploys from a branch other than the default one.
 - `docs/self-hosting.md` explains the workflow and a by-hand update for a
   Deploy-button copy, which shares no history with this project.
@@ -379,7 +379,7 @@ change: this release needs no migration step.
 ### Upgrading from 0.1.0
 
 A copy made from 0.1.0 does not have the update workflow yet. Add
-`.github/workflows/update-signudoc.yml` to it once (Settings in YouSignNow
+`.github/workflows/update-yousignnow.yml` to it once (Settings in YouSignNow
 links to the right page, and `docs/self-hosting.md` has the steps), then run
 it. If it asks which version you deployed, use `v0.1.0`.
 
@@ -464,11 +464,11 @@ checked against the real services:
 
 YouSignNow is software, not legal advice. See the README's legal disclaimer.
 
-[0.5.2]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.5.2
-[0.5.1]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.5.1
-[0.5.0]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.5.0
-[0.4.0]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.4.0
-[0.3.0]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.3.0
-[0.2.1]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.2.1
-[0.2.0]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.2.0
-[0.1.0]: https://github.com/NYLLON-SOFTWARE/SignuDoc/releases/tag/v0.1.0
+[0.5.2]: https://github.com/marronejohn/YouSignNow/releases/tag/v0.5.2
+[0.5.1]: https://github.com/marronejohn/YouSignNow/releases/tag/v0.5.1
+[0.5.0]: https://github.com/marronejohn/YouSignNow/releases/tag/v0.5.0
+[0.4.0]: https://github.com/marronejohn/YouSignNow/releases/tag/v0.4.0
+[0.3.0]: https://github.com/marronejohn/YouSignNow/releases/tag/v0.3.0
+[0.2.1]: https://github.com/marronejohn/YouSignNow/releases/tag/v0.2.1
+[0.2.0]: https://github.com/marronejohn/YouSignNow/releases/tag/v0.2.0
+[0.1.0]: https://github.com/marronejohn/YouSignNow/releases/tag/v0.1.0

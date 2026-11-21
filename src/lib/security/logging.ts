@@ -3,7 +3,7 @@
 // Each line is one JSON object, so a Vercel log drain (Settings, Drains in
 // the Vercel team) hands them to Datadog, Splunk, Elastic, Axiom, Better
 // Stack or any other SIEM as fields rather than text. Every line has
-// "source": "signudoc" and a "type":
+// "source": "yousignnow" and a "type":
 //
 // - "security": something worth an operator's attention (a refused request,
 //   a failure), from logSecurityEvent.
@@ -162,7 +162,7 @@ export function toLogLine(
   fields: Record<string, unknown> & { level: string; type: string },
 ): string {
   return JSON.stringify({
-    source: "signudoc",
+    source: "yousignnow",
     time: new Date().toISOString(),
     ...fields,
   });

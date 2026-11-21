@@ -422,7 +422,7 @@ export async function prepareSignerRevision(
           document.context.obj({
             AP: { N: embedded.ref },
             F: LOCKED_ANNOTATION_FLAGS,
-            NM: PDFHexString.fromText(`signudoc-field-${field.id ?? "field"}`),
+            NM: PDFHexString.fromText(`yousignnow-field-${field.id ?? "field"}`),
             Rect: annotationRect,
             Subtype: "Stamp",
             Type: "Annot",

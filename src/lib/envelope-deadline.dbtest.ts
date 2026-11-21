@@ -49,7 +49,7 @@ const createdUsers: string[] = [];
 before(async () => {
   database = await openTestDatabase();
   // The invitation email reads the install's name through the shared pool.
-  globalThis.__signudocPgPool = database;
+  globalThis.__yousignnowPgPool = database;
 });
 
 after(async () => {
@@ -613,7 +613,7 @@ async function createSignableEnvelope() {
   const now = unixNow();
   const sent = await createSentEnvelope({ expiresAt: now + DAY });
   const fieldId = randomUUID();
-  const storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-deadline-"));
+  const storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-deadline-"));
   const storageService = createStorageService({
     env: { STORAGE_DRIVER: "local", STORAGE_LOCAL_DIR: storageDir },
   });

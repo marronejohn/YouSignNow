@@ -60,7 +60,7 @@ const createdUsers: string[] = [];
 
 before(async () => {
   database = await openTestDatabase();
-  globalThis.__signudocPgPool = database;
+  globalThis.__yousignnowPgPool = database;
 });
 
 after(async () => {
@@ -971,7 +971,7 @@ test("an in-flight decline on the old link cannot finish after a correction", as
   const envelopeId = await createEnvelope({ userId });
   const signer = await createSigner({ envelopeId });
   const storageDir = await mkdtemp(
-    path.join(tmpdir(), "signudoc-correct-decline-"),
+    path.join(tmpdir(), "yousignnow-correct-decline-"),
   );
   const storageService = createStorageService({
     env: { STORAGE_DRIVER: "local", STORAGE_LOCAL_DIR: storageDir },
@@ -1506,7 +1506,7 @@ async function declineRacingAnotherCorrection(
     status: "pending",
   });
   const storageDir = await mkdtemp(
-    path.join(tmpdir(), "signudoc-correct-other-decline-"),
+    path.join(tmpdir(), "yousignnow-correct-other-decline-"),
   );
   const storageService = createStorageService({
     env: { STORAGE_DRIVER: "local", STORAGE_LOCAL_DIR: storageDir },

@@ -137,9 +137,9 @@ npm run test:db
 npm run test:e2e
 ```
 
-`npm test` runs the unit tests, which need nothing else running. `npm run test:db` runs the few tests that need a real Postgres (the rate limit counter, the cleanup job's lock and first-run setup) against the `signudoc_e2e` database.
+`npm test` runs the unit tests, which need nothing else running. `npm run test:db` runs the few tests that need a real Postgres (the rate limit counter, the cleanup job's lock and first-run setup) against the `yousignnow_e2e` database.
 
-`npm run test:e2e` runs the Playwright end-to-end test. It starts the app against a separate `signudoc_e2e` database on the same Postgres server, sets the site up as its first visitor, signs up a sender, sends a PDF, signs it as the recipient and downloads the results. Install the browser once with `npx playwright install chromium`.
+`npm run test:e2e` runs the Playwright end-to-end test. It starts the app against a separate `yousignnow_e2e` database on the same Postgres server, sets the site up as its first visitor, signs up a sender, sends a PDF, signs it as the recipient and downloads the results. Install the browser once with `npx playwright install chromium`.
 
 ## Project structure
 

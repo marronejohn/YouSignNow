@@ -51,7 +51,7 @@ test("a committed audit row is written as one JSON line that matches the row", a
     [recorded.id],
   );
 
-  assert.equal(line?.source, "signudoc");
+  assert.equal(line?.source, "yousignnow");
   assert.equal(line?.trail, "site");
   assert.equal(line?.event, "sign_in_succeeded");
   assert.equal(line?.actorEmail, "pat@acme.com");

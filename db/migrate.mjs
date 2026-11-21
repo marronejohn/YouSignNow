@@ -44,7 +44,7 @@ export async function runMigrations({
   migrationsDir = DEFAULT_MIGRATIONS_DIR,
 }) {
   const client = new pg.Client({
-    application_name: "signudoc-migrate",
+    application_name: "yousignnow-migrate",
     connectionString: normalizeDatabaseUrl(connectionString),
     connectionTimeoutMillis: 15_000,
   });

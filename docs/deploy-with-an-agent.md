@@ -30,7 +30,7 @@ https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmarronejo
 
 ## 2. Create the copy on GitHub
 
-Vercel asks where to put the copy of YouSignNow. Choose the person's GitHub account (or the organization they name), keep the name `signudoc` unless it is taken, and create it. A private repository is fine. If Vercel asks to install or authorize its GitHub app, that is expected; if GitHub asks the person to confirm with a passkey or code, hand over to them.
+Vercel asks where to put the copy of YouSignNow. Choose the person's GitHub account (or the organization they name), keep the name `yousignnow` unless it is taken, and create it. A private repository is fine. If Vercel asks to install or authorize its GitHub app, that is expected; if GitHub asks the person to confirm with a passkey or code, hand over to them.
 
 ## 3. Add the three stores, in the order shown
 

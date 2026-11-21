@@ -48,10 +48,10 @@ before(async () => {
   database = await openTestDatabase();
   // The seal and the emails read the install's settings through the shared
   // pool.
-  globalThis.__signudocPgPool = database;
+  globalThis.__yousignnowPgPool = database;
 
   // A void and a decline read their storage and email from the environment.
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-certificates-"));
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-certificates-"));
   Object.assign(process.env, {
     EMAIL_CAPTURE_DIR: path.join(storageDir, "outbox"),
     EMAIL_DRIVER: "capture",

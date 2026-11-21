@@ -18,7 +18,7 @@ const baseURL = `http://localhost:${String(port)}`;
 
 export const e2eDatabaseUrl =
   process.env.E2E_DATABASE_URL ??
-  "postgres://signudoc:signudoc@127.0.0.1:5432/signudoc_e2e";
+  "postgres://yousignnow:yousignnow@127.0.0.1:5432/yousignnow_e2e";
 export const e2eDataDir = path.resolve(".data", "e2e");
 export const e2eOutboxDir = path.join(e2eDataDir, "outbox");
 // First-run setup asks for this, as it does on a deployment that sets one.

@@ -52,8 +52,8 @@ const createdUsers: string[] = [];
 
 before(async () => {
   database = await openTestDatabase();
-  globalThis.__signudocPgPool = database;
-  workDir = await mkdtemp(path.join(tmpdir(), "signudoc-parallel-"));
+  globalThis.__yousignnowPgPool = database;
+  workDir = await mkdtemp(path.join(tmpdir(), "yousignnow-parallel-"));
   Object.assign(process.env, {
     EMAIL_CAPTURE_DIR: path.join(workDir, "outbox"),
     EMAIL_DRIVER: "capture",

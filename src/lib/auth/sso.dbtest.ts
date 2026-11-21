@@ -21,7 +21,7 @@ import { needsTwoFactorSetup } from "../sign-in-security.ts";
 // nonce checks are all the real thing. Run with `npm run test:db`.
 
 const BASE_URL = "http://localhost:3998";
-const CLIENT_ID = "signudoc-test";
+const CLIENT_ID = "yousignnow-test";
 const PASSWORD = "a long enough passphrase";
 
 registerHooks({

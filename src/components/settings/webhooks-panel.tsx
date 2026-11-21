@@ -15,7 +15,7 @@ import type { WebhookDeliverySummary } from "@/lib/webhooks/log";
 
 const GENERIC_ERROR_MESSAGE = "Something went wrong. Please try again.";
 const WEBHOOK_DOCS_URL =
-  "https://github.com/NYLLON-SOFTWARE/SignuDoc/blob/main/docs/api.md#webhooks";
+  "https://github.com/marronejohn/YouSignNow/blob/main/docs/api.md#webhooks";
 
 const EVENT_LABELS: Record<WebhookEventType, string> = {
   "envelope.completed": "Completed",
@@ -535,7 +535,7 @@ export function WebhooksPanel() {
             maxLength={2048}
             name="webhook-url"
             onChange={(event) => setUrl(event.target.value)}
-            placeholder="https://app.example.com/webhooks/signudoc"
+            placeholder="https://app.example.com/webhooks/yousignnow"
             value={url}
           />
         </label>

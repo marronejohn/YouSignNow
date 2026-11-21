@@ -32,8 +32,8 @@ const createdUsers: string[] = [];
 
 before(async () => {
   database = await openTestDatabase();
-  globalThis.__signudocPgPool = database;
-  storageDir = await mkdtemp(path.join(tmpdir(), "signudoc-void-"));
+  globalThis.__yousignnowPgPool = database;
+  storageDir = await mkdtemp(path.join(tmpdir(), "yousignnow-void-"));
   outboxDir = path.join(storageDir, "outbox");
   Object.assign(process.env, {
     EMAIL_CAPTURE_DIR: outboxDir,
